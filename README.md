@@ -1,1 +1,1 @@
-View as HTML: https://html-preview.github.io/?url=https://github.com/paplorinc/BitCan/blob/main/index.html
+View as HTML: https://htmlpreview.github.io/?https://github.com/paplorinc/BitCan/blob/main/index.html
