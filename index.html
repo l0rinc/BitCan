@@ -28,7 +28,7 @@
         }
 
         .word-box {
-            width: calc(6% - 5px);
+            flex: 0 0 auto;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -38,11 +38,6 @@
             border-radius: 10px;
             padding: 10px;
             margin: 5px;
-            box-sizing: border-box;
-        }
-
-        .new-line {
-            clear: left; /* Forces the element to clear past elements and start on a new line */
         }
 
         .word {
@@ -85,10 +80,13 @@
         .section-header {
             width: 100%;
             text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 25px;
+            font-weight: bold;
             border-bottom: 1px solid #ccc;
             line-height: 0;
             margin: 20px 0 10px;
-            box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 1);
         }
 
         .section-header::after {
@@ -98,8 +96,6 @@
             background: white;
             position: relative;
             top: -13px;
-            font-size: 30px;
-            line-height: normal;
         }
 
         @media print {
@@ -121,18 +117,6 @@
             flex-wrap: wrap;
             gap: 10px;
             justify-content: space-around;
-        }
-
-        #zoom-control-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        #zoom-control {
-            width: 300px;
-            margin: 0 15px;
         }
     </style>
 </head>
@@ -157,29 +141,11 @@
         <p>As custodian of your digital assets, safeguard your seed phrase with the utmost confidence provided by BitCan.</p>
     </article>
 
-    <div id="zoom-control-wrapper">
-        <label for="zoom-control">Zoom:</label>
-        <input type="range" id="zoom-control" min="1" max="2" step="0.1" value="1">
-    </div>
-
     <div id="wordsContainer"></div>
 </div>
 
 <script>
-    const zoomControl = document.getElementById('zoom-control');
     const wordsContainer = document.getElementById('wordsContainer');
-
-    zoomControl.addEventListener('input', function () {
-        updateWordBoxSize(this.value);
-    });
-
-    function updateWordBoxSize(zoomLevel) {
-        const wordBoxes = document.querySelectorAll('.word-box');
-        wordBoxes.forEach(box => {
-            box.style.width = `calc(${zoomLevel} * (6% - 5px))`;
-            box.style.height = `calc(${zoomLevel} * (6% - 5px))`;
-        });
-    }
 
     function drawLine(svg, x1, y1, x2, y2, isBold) {
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
