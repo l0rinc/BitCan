@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BitCan: ‘Free as in Beer’ Bitcoin Seed Storage</title>
+    <style>
+        :root {
+            --background-gradient: radial-gradient(circle, white 0%, rgb(184, 183, 183) 100%);
+            --box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1);
+            --light-grey-border: 2px solid #ccc;
+            --font-family-monospace: 'Courier New', monospace;
+            --line-stroke-width: 0.5;
+            --bold-line-stroke-width: 4;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 5px;
+            padding: 10px;
+            background: var(--background-gradient);
+        }
+
+        article {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1rem;
+        }
+
+        .word-box {
+            width: calc(6% - 5px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1);
+            border: 2px solid #ccc; /* Adds a light grey border */
+            border-radius: 10px;
+            padding: 10px;
+            margin: 5px;
+            box-sizing: border-box;
+        }
+
+        .new-line {
+            clear: left; /* Forces the element to clear past elements and start on a new line */
+        }
+
+        .word {
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .binary-string {
+            font-family: 'Courier New', monospace;
+            color: Charcoal;
+            font-style: italic;
+            font-size: 8px;
+        }
+
+        svg {
+            overflow: visible;
+            margin-top: 5px;
+            background: OldLace;
+        }
+
+        .strong-word-part {
+            margin: 1px;
+        }
+
+        .leading-zeros {
+            color: lightgrey;
+        }
+
+        line.light {
+            stroke: darkgrey;
+            stroke-width: 0.5;
+        }
+
+        line.bold {
+            stroke: black;
+            stroke-width: 4;
+        }
+
+        .section-header {
+            width: 100%;
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+            line-height: 0;
+            margin: 20px 0 10px;
+            box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header::after {
+            display: inline-block;
+            vertical-align: middle;
+            padding: 0 10px;
+            background: white;
+            position: relative;
+            top: -13px;
+            font-size: 30px;
+            line-height: normal;
+        }
+
+        @media print {
+            body {
+                background: none;
+            }
+
+            .word-box {
+                background: white;
+                box-shadow: none;
+
+                page-break-inside: avoid;
+                break-inside: avoid-column;
+            }
+        }
+
+        #wordsContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: space-around;
+        }
+
+        #zoom-control-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        #zoom-control {
+            width: 300px;
+            margin: 0 15px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <article>
+        <h1>BitCan: ‘Free as in Beer’ Bitcoin Seed Storage</h1>
+        <p>Welcome to BitCan, the resilient and economical solution for securing your <a href="https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki" target="_blank">BIP39 mnemonic seed phrases</a>. Leveraging common materials, BitCan offers a robust and lasting repository for Bitcoin wallet recovery information.</p>
+        <p>Each glyph below corresponds to a word from the BIP39 list, the industry standard for wallet recovery seed generation, circumventing paper backup fragility and ensuring durability against physical adversity.</p>
+        <h2>Step-by-Step Instructions:</h2>
+        <ol>
+            <li>Securely generate your mnemonic seed phrase using a trusted offline hardware wallet.</li>
+            <li>Transcribe your 12/24-word phrase onto paper, aligning the words with their corresponding glyphs.</li>
+            <li>Depict each glyph with precision, cross-referencing the list provided. Confirm accuracy by reading the sequence in reverse.</li>
+            <li>Transform a discarded aluminum can into a flat metal sheet.</li>
+            <li>On the metal, draw a grid for uniform glyph placement and lightly pencil in the designs.</li>
+            <li>Indelibly etch the glyphs onto the metal using a durable tool such as a screwdriver.</li>
+            <li>Ensure each glyph is distinct and accurately corresponds to your BIP39 phrase. Test by decoding the glyphs.</li>
+            <li>Store the etched metal securely and discretely for safety and privacy.</li>
+        </ol>
+        <p>BitCan's inexpensive yet formidable method provides enhanced protection for your wallet's seed phrase from threats like moisture and higher temperatures, with an added layer of security through obscurity.</p>
+        <p>As custodian of your digital assets, safeguard your seed phrase with the utmost confidence provided by BitCan.</p>
+    </article>
+
+    <div id="zoom-control-wrapper">
+        <label for="zoom-control">Zoom:</label>
+        <input type="range" id="zoom-control" min="1" max="2" step="0.1" value="1">
+    </div>
+
+    <div id="wordsContainer"></div>
+</div>
+
+<script>
+    const zoomControl = document.getElementById('zoom-control');
+    const wordsContainer = document.getElementById('wordsContainer');
+
+    zoomControl.addEventListener('input', function () {
+        updateWordBoxSize(this.value);
+    });
+
+    function updateWordBoxSize(zoomLevel) {
+        const wordBoxes = document.querySelectorAll('.word-box');
+        wordBoxes.forEach(box => {
+            box.style.width = `calc(${zoomLevel} * (6% - 5px))`;
+            box.style.height = `calc(${zoomLevel} * (6% - 5px))`;
+        });
+    }
+
+    function drawLine(svg, x1, y1, x2, y2, isBold) {
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', x1);
+        line.setAttribute('y1', y1);
+        line.setAttribute('x2', x2);
+        line.setAttribute('y2', y2);
+        line.setAttribute('stroke-linecap', 'round');
+        line.classList.add(isBold ? 'bold' : 'light');
+        svg.appendChild(line);
+    }
+
+    function renderWordAndGlyph(container, word, index) {
+        const binaryString = index.toString(2).padStart(11, '0');
+
+        const wordElement = document.createElement('div');
+        wordElement.className = 'word';
+
+        const strongElement = document.createElement('strong');
+        strongElement.classList.add('strong-word-part');
+        strongElement.textContent = word.substring(0, 4);
+        wordElement.appendChild(strongElement);
+
+        const restOfWordText = document.createTextNode(word.substring(4));
+        wordElement.appendChild(restOfWordText);
+
+        const binaryStringElement = document.createElement('span');
+        binaryStringElement.className = 'binary-string';
+
+        const firstOneIndex = binaryString.indexOf('1');
+        const leadingZeros = document.createElement('span');
+        leadingZeros.classList.add('leading-zeros');
+        leadingZeros.textContent = binaryString.substring(0, firstOneIndex);
+
+        binaryStringElement.appendChild(leadingZeros);
+
+        const restOfBinaryString = document.createTextNode(binaryString.substring(firstOneIndex));
+        binaryStringElement.appendChild(restOfBinaryString);
+
+        wordElement.appendChild(document.createElement('br'));
+        wordElement.appendChild(binaryStringElement);
+
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('viewBox', '0 0 50 100');
+        drawChar(svg, binaryString.split('').reverse().join(''));
+
+        container.appendChild(wordElement);
+        container.appendChild(svg);
+    }
+
+
+    function drawChar(svg, binaryString) {
+        const lines = [[0, 0, 1, 0], [0, 0, 0, 1], [0, 0, 1, 1], [1, 0, 0, 1], [0, 1, 1, 1], [1, 0, 1, 1], [0, 1, 0, 2], [0, 1, 1, 2], [1, 1, 0, 2], [0, 2, 1, 2], [1, 1, 1, 2]];
+
+        "01".split('').forEach(char => {
+            lines.forEach((points, index) => {
+                if (binaryString[index] === char) {
+                    drawLine(svg, points[0] * 50, points[1] * 50, points[2] * 50, points[3] * 50, char === '1');
+                }
+            });
+        });
+    }
+
+    function createSectionHeader(letter) {
+        const sectionHeader = document.createElement('div');
+        sectionHeader.className = 'section-header';
+        sectionHeader.innerText = letter;
+        return sectionHeader;
+    }
+
+    function fetchAndDisplayWords() {
+        fetch('https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt')
+            .then(response => response.text())
+            .then(text => text.trim().split('\n'))
+            .then(words => {
+                let lastLetter = '';
+                words.forEach((word, index) => {
+                    word = word.toUpperCase();
+                    if (word[0] !== lastLetter) {
+                        lastLetter = word[0];
+                        wordsContainer.appendChild(createSectionHeader(lastLetter));
+                    }
+
+                    const wordBox = document.createElement('div');
+                    wordBox.className = 'word-box';
+                    renderWordAndGlyph(wordBox, word, index.toString(2).padStart(11, '0'));
+                    wordsContainer.appendChild(wordBox);
+                });
+            });
+    }
+
+    fetchAndDisplayWords();
+</script>
+</body>
+</html>
