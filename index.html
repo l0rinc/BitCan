@@ -64,10 +64,6 @@
             margin-right: 1px;
         }
 
-        .leading-zeros {
-            color: Silver;
-        }
-
         line.light {
             stroke: darkgrey;
             stroke-width: 0.5;
@@ -208,17 +204,7 @@
 
         const binaryStringElement = document.createElement('span');
         binaryStringElement.className = 'binary-string';
-
-        let firstOneIndex = binaryString.indexOf('1');
-        firstOneIndex === -1 && (firstOneIndex = binaryString.length);
-        const leadingZeros = document.createElement('span');
-        leadingZeros.classList.add('leading-zeros');
-        leadingZeros.textContent = binaryString.substring(0, firstOneIndex);
-
-        binaryStringElement.appendChild(leadingZeros);
-
-        const restOfBinaryString = document.createTextNode(binaryString.substring(firstOneIndex));
-        binaryStringElement.appendChild(restOfBinaryString);
+        binaryStringElement.textContent = binaryString;
 
         wordElement.appendChild(document.createElement('br'));
         wordElement.appendChild(binaryStringElement);
