@@ -147,7 +147,7 @@
             <summary>Decoding Instructions</summary>
             <ol>
                 <li>Begin with your etched metal sheet that has all your glyphs.</li>
-                <li>For each glyph, focus on the last (11th) line position (the bottom right vertical line).</li>
+                <li>For each glyph, focus on the last (11th) line position (the bottom vertical line).</li>
                 <li>If the line is present, the corresponding word is in the second half of the BIP39 word list; if it's absent, it is in the first half.</li>
                 <li>Continue doing this for each line (binary search approach), moving from the rightmost line to the leftmost line of the glyph.</li>
                 <li>With each step, you divide the current section of the word list in half again, choosing the second half if the line is present and the first half if it is absent.</li>
@@ -217,7 +217,19 @@
 
 
     function drawChar(svg, binaryString) {
-        const lines = [[0, 0, 1, 0], [0, 0, 0, 1], [0, 0, 1, 1], [1, 0, 0, 1], [0, 1, 1, 1], [1, 0, 1, 1], [0, 1, 0, 2], [0, 1, 1, 2], [1, 1, 0, 2], [0, 2, 1, 2], [1, 1, 1, 2]];
+        const lines = [
+            [0, 0, 1, 0],
+            [0, 0, 0, 1],
+            [0, 0, 1, 1],
+            [1, 0, 0, 1],
+            [0, 1, 1, 1],
+            [1, 0, 1, 1],
+            [0, 1, 0, 2],
+            [0, 1, 1, 2],
+            [1, 1, 0, 2],
+            [1, 1, 1, 2],
+            [0, 2, 1, 2],
+        ];
 
         "01".split('').forEach(char => {
             lines.forEach((points, index) => {
