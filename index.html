@@ -37,7 +37,7 @@
             padding: 0.6em;
             margin: 0.2em;
             width: 3em;
-            height: 8em;
+            height: 8.3em;
         }
 
         .word {
@@ -55,11 +55,9 @@
 
         svg {
             width: 100%;
-            height: auto;
             display: block;
             overflow: visible;
             margin-top: 0.3em;
-            background: OldLace;
         }
 
         .strong-word-part {
@@ -143,11 +141,9 @@
 <div>
     <article>
         <h1>BitCan: ‘Free as in Beer’ Bitcoin Seed Storage</h1>
-        <p>Welcome to BitCan, the resilient and economical solution for securing your <a href="https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki" target="_blank">BIP39 mnemonic seed
-            phrases</a>.</p>
+        <p>Welcome to BitCan, the resilient and economical solution for securing your <a href="https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki" target="_blank">BIP39 mnemonic seed phrases</a>.</p>
         <p>Leveraging common materials, BitCan offers a robust and lasting repository for Bitcoin wallet recovery information.</p>
-        <p>Each glyph below corresponds to a word from the BIP39 list, the industry standard for wallet recovery seed generation, circumventing paper backup fragility and ensuring durability against
-            physical adversity.</p>
+        <p>Each glyph below corresponds to a word from the BIP39 list, the industry standard for wallet recovery seed generation, circumventing paper backup fragility and ensuring durability against physical adversity.</p>
 
         <details>
             <summary>Encoding Instructions</summary>
@@ -226,18 +222,30 @@
 
         wordElement.appendChild(document.createElement('br'));
         wordElement.appendChild(binaryStringElement);
+        container.appendChild(wordElement);
 
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-        svg.setAttribute('viewBox', '0 0 50 100');
         drawChar(svg, binaryString.split('').reverse().join(''));
-
-        container.appendChild(wordElement);
         container.appendChild(svg);
     }
 
 
     function drawChar(svg, binaryString) {
+        const width = 50;
+        const height = 100;
+
+        // Create a rect element and set its attributes
+        const backgroundRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        backgroundRect.setAttribute('x', 0);
+        backgroundRect.setAttribute('y', 0);
+        backgroundRect.setAttribute('width', width);
+        backgroundRect.setAttribute('height', height);
+        backgroundRect.setAttribute('fill', 'OldLace');
+        backgroundRect.setAttribute('rx', 3);
+
+        // Append the rectangle as the first child of the SVG
+        svg.appendChild(backgroundRect);
+
         const inset = 5;
         const lines = [
             [inset, 0, 50 - inset, 0],
