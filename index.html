@@ -204,7 +204,7 @@
 
         const binaryStringElement = document.createElement('span');
         binaryStringElement.className = 'binary-string';
-        binaryStringElement.textContent = binaryString;
+        binaryStringElement.innerHTML = binaryString.replaceAll('1', '<strong>1</strong>');
 
         wordElement.appendChild(document.createElement('br'));
         wordElement.appendChild(binaryStringElement);
