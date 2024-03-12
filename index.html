@@ -266,7 +266,7 @@
                     word = word.toUpperCase();
                     if (word[0] !== lastLetter) {
                         lastLetter = word[0];
-                        tocHTML += `<a href="${window.location.href}#${lastLetter}" class="toc-item">${lastLetter}</a>`;
+                        tocHTML += `<a href="${window.location.origin + window.location.pathname}#${lastLetter}" class="toc-item">${lastLetter}</a>`;
 
                         const sectionHeader = document.createElement('div');
                         sectionHeader.className = 'section-header';
