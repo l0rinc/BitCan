@@ -93,10 +93,8 @@
         .section-header::after {
             display: inline-block;
             vertical-align: middle;
-            padding: 0 10px;
             background: white;
             position: relative;
-            top: -13px;
         }
 
         @media print {
@@ -180,7 +178,6 @@
 <script>
     const wordsContainer = document.getElementById('wordsContainer');
     const tocContainer = document.getElementById('tocContainer');
-    let tocHTML = '';
 
     function drawLine(svg, x1, y1, x2, y2, isBold) {
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -266,13 +263,17 @@
                     word = word.toUpperCase();
                     if (word[0] !== lastLetter) {
                         lastLetter = word[0];
-                        tocHTML += `<a href="${window.location.origin + window.location.pathname}#${lastLetter}" class="toc-item">${lastLetter}</a>`;
 
                         const sectionHeader = document.createElement('div');
                         sectionHeader.className = 'section-header';
-                        sectionHeader.id = lastLetter;
                         sectionHeader.innerText = lastLetter;
                         wordsContainer.appendChild(sectionHeader);
+
+                        const button = document.createElement('button');
+                        button.className = "toc-item";
+                        button.textContent = lastLetter;
+                        button.onclick = () => sectionHeader.scrollIntoView({behavior: 'smooth', block: 'start'});
+                        tocContainer.appendChild(button);
                     }
 
                     const wordBox = document.createElement('div');
@@ -280,7 +281,6 @@
                     renderWordAndGlyph(wordBox, word, index.toString(2).padStart(11, '0'));
                     wordsContainer.appendChild(wordBox);
                 });
-                tocContainer.innerHTML = tocHTML;
             });
     }
 
