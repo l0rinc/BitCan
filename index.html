@@ -38,6 +38,7 @@
             border-radius: 10px;
             padding: 10px;
             margin: 5px;
+            width: 50px;
         }
 
         .word {
@@ -116,7 +117,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            justify-content: space-around;
+            justify-content: flex-start;
         }
     </style>
 </head>
@@ -240,13 +241,6 @@
         });
     }
 
-    function createSectionHeader(letter) {
-        const sectionHeader = document.createElement('div');
-        sectionHeader.className = 'section-header';
-        sectionHeader.innerText = letter;
-        return sectionHeader;
-    }
-
     function fetchAndDisplayWords() {
         fetch('https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt')
             .then(response => response.text())
@@ -257,7 +251,10 @@
                     word = word.toUpperCase();
                     if (word[0] !== lastLetter) {
                         lastLetter = word[0];
-                        wordsContainer.appendChild(createSectionHeader(lastLetter));
+                        const sectionHeader = document.createElement('div');
+                        sectionHeader.className = 'section-header';
+                        sectionHeader.innerText = lastLetter;
+                        wordsContainer.appendChild(sectionHeader);
                     }
 
                     const wordBox = document.createElement('div');
