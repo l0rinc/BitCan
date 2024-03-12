@@ -119,6 +119,20 @@
             gap: 10px;
             justify-content: center;
         }
+
+        #tocContainer {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .toc-item {
+            display: inline-block;
+            margin: 0 5px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f8f8f8;
+        }
     </style>
 </head>
 <body>
@@ -156,16 +170,17 @@
             </ol>
         </details>
 
-        <p>BitCan's inexpensive yet formidable method provides enhanced protection for your wallet's seed phrase from threats like moisture and higher temperatures, with an added layer of security
-            through obscurity.</p>
-        <p>As custodian of your digital assets, safeguard your seed phrase with the utmost confidence provided by BitCan.</p>
+        <p>BitCan's inexpensive method provides enhanced protection for your wallet's seed phrase from threats like moisture and higher temperatures, with an added layer of security through obscurity.</p>
     </article>
 
+    <div id="tocContainer"></div>
     <div id="wordsContainer"></div>
 </div>
 
 <script>
     const wordsContainer = document.getElementById('wordsContainer');
+    const tocContainer = document.getElementById('tocContainer');
+    let tocHTML = '';
 
     function drawLine(svg, x1, y1, x2, y2, isBold) {
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -251,8 +266,11 @@
                     word = word.toUpperCase();
                     if (word[0] !== lastLetter) {
                         lastLetter = word[0];
+                        tocHTML += `<a href="#${lastLetter}" class="toc-item">${lastLetter}</a>`;
+
                         const sectionHeader = document.createElement('div');
                         sectionHeader.className = 'section-header';
+                        sectionHeader.id = lastLetter;
                         sectionHeader.innerText = lastLetter;
                         wordsContainer.appendChild(sectionHeader);
                     }
@@ -262,6 +280,7 @@
                     renderWordAndGlyph(wordBox, word, index.toString(2).padStart(11, '0'));
                     wordsContainer.appendChild(wordBox);
                 });
+                tocContainer.innerHTML = tocHTML;
             });
     }
 
