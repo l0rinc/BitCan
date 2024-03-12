@@ -7,22 +7,20 @@
     <style>
         :root {
             --background-gradient: radial-gradient(circle, white 0%, rgb(184, 183, 183) 100%);
-            --box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1);
-            --light-grey-border: 2px solid #ccc;
+            --box-shadow: 0 0.3em 0.5em rgba(0, 0, 0, 0.1);
+            --light-grey-border: 0.1em solid #ccc;
             --font-family-monospace: 'Courier New', monospace;
-            --line-stroke-width: 0.5;
-            --bold-line-stroke-width: 4;
         }
 
         body {
             font-family: Arial, sans-serif;
-            margin: 5px;
-            padding: 10px;
+            margin: 0.3em;
+            padding: 0.6em;
             background: var(--background-gradient);
         }
 
         article {
-            max-width: 800px;
+            max-width: 50em;
             margin: 0 auto;
             font-size: 1rem;
         }
@@ -33,30 +31,33 @@
             flex-direction: column;
             align-items: center;
             background: linear-gradient(145deg, #ffffff, #e6e6e6);
-            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1);
-            border: 2px solid #ccc;
-            border-radius: 10px;
-            padding: 10px;
-            margin: 3px;
-            width: 3em;
+            box-shadow: var(--box-shadow);
+            border: 0.1em solid #ccc;
+            border-radius: 0.6em;
+            padding: 0.6em;
+            margin: 0.2em;
+            width: 20vw;
+            height: 40vw;
+            max-width: 3em;
+            max-height: 8em;
         }
 
         .word {
-            font-family: 'Courier New', monospace;
+            font-family: var(--font-family-monospace);
             text-align: center;
-            font-size: 12px;
+            font-size: 0.8em;
         }
 
         .binary-string {
-            font-family: 'Courier New', monospace;
+            font-family: var(--font-family-monospace);
             color: Charcoal;
             font-style: italic;
-            font-size: 8px;
+            font-size: 0.65em;
         }
 
         svg {
             overflow: visible;
-            margin-top: 5px;
+            margin-top: 0.3em;
             background: OldLace;
         }
 
@@ -70,7 +71,7 @@
 
         line.light {
             stroke: darkgrey;
-            stroke-width: 0.4;
+            stroke-width: 0.5;
         }
 
         line.bold {
@@ -81,13 +82,12 @@
         .section-header {
             width: 100%;
             text-align: center;
-            font-family: 'Courier New', monospace;
-            font-size: 25px;
+            font-family: var(--font-family-monospace);
+            font-size: 2em;
             font-weight: bold;
-            border-bottom: 1px solid #ccc;
-            line-height: 0;
-            margin: 20px 0 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+            border-bottom: var(--light-grey-border);
+            line-height: normal;
+            box-shadow: var(--box-shadow);
         }
 
         .section-header::after {
@@ -99,25 +99,25 @@
 
         .toc-item {
             display: inline-block;
-            margin: 0 5px 15px;
-            padding: 5px;
-            width: 25px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            margin: 0 0.3em 0.9em;
+            padding: 0.3em;
+            width: 1.5em;
+            border: var(--light-grey-border);
+            border-radius: 0.3em;
             background-color: #f8f8f8;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 1);
+            box-shadow: var(--box-shadow);
         }
 
         #wordsContainer {
             display: flex;
             flex-wrap: wrap;
-            gap: 5px;
+            gap: 0.3em;
             justify-content: center;
         }
 
         #tocContainer {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 1.2em;
         }
 
         @media print {
@@ -125,14 +125,13 @@
                 background: none;
             }
 
-            #tocContainer {
+            #tocContainer, .toc-item {
                 display: none;
             }
 
             .word-box {
                 background: white;
                 box-shadow: none;
-
                 page-break-inside: avoid;
                 break-inside: avoid;
             }
@@ -213,7 +212,8 @@
         const binaryStringElement = document.createElement('span');
         binaryStringElement.className = 'binary-string';
 
-        const firstOneIndex = binaryString.indexOf('1');
+        let firstOneIndex = binaryString.indexOf('1');
+        firstOneIndex === -1 && (firstOneIndex = binaryString.length);
         const leadingZeros = document.createElement('span');
         leadingZeros.classList.add('leading-zeros');
         leadingZeros.textContent = binaryString.substring(0, firstOneIndex);
@@ -236,7 +236,7 @@
 
 
     function drawChar(svg, binaryString) {
-        const inset = 4;
+        const inset = 5;
         const lines = [
             [inset, 0, 50 - inset, 0],
             [0, inset, 0, 50 - inset],
