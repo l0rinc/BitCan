@@ -56,7 +56,6 @@
         svg {
             width: 100%;
             height: auto;
-            max-height: 100%;
             display: block;
             overflow: visible;
             margin-top: 0.3em;
@@ -229,6 +228,7 @@
         wordElement.appendChild(binaryStringElement);
 
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
         svg.setAttribute('viewBox', '0 0 50 100');
         drawChar(svg, binaryString.split('').reverse().join(''));
 
