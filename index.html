@@ -230,24 +230,27 @@
 
 
     function drawChar(svg, binaryString) {
+        const inset = 5;
         const lines = [
-            [0, 0, 1, 0],
-            [0, 0, 0, 1],
-            [0, 0, 1, 1],
-            [1, 0, 0, 1],
-            [0, 1, 1, 1],
-            [1, 0, 1, 1],
-            [0, 1, 0, 2],
-            [0, 1, 1, 2],
-            [1, 1, 0, 2],
-            [1, 1, 1, 2],
-            [0, 2, 1, 2],
+            [inset, 0, 50 - inset, 0],
+            [0, inset, 0, 50 - inset],
+            [inset, inset, 50 - inset, 50 - inset],
+            [50 - inset, inset, inset, 50 - inset],
+            [50, inset, 50, 50 - inset],
+
+            [inset, 50, 50 - inset, 50],
+            [0, 50 + inset, 0, 100 - inset],
+            [inset, 50 + inset, 50 - inset, 100 - inset],
+            [50 - inset, 50 + inset, inset, 100 - inset],
+            [50, 50 + inset, 50, 100 - inset],
+
+            [inset, 100, 50 - inset, 100],
         ];
 
         "01".split('').forEach(char => {
             lines.forEach((points, index) => {
                 if (binaryString[index] === char) {
-                    drawLine(svg, points[0] * 50, points[1] * 50, points[2] * 50, points[3] * 50, char === '1');
+                    drawLine(svg, points[0], points[1], points[2], points[3], char === '1');
                 }
             });
         });
