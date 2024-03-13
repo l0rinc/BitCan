@@ -26,7 +26,9 @@
         }
 
         .word-box {
-            width: 3em;
+            width: 2.5em;
+            height: 7em;
+            padding: 0.6em;
             margin: 0.2em auto;
             display: flex;
             flex-direction: column;
@@ -35,12 +37,10 @@
             box-shadow: var(--box-shadow);
             border: var(--light-grey-border);
             border-radius: 0.5em;
-            padding: 0.6em;
-            height: 8.3em;
         }
 
         .word-box.smaller {
-            height: 7.5em;
+            height: 6.2em;
             margin: 1em;
         }
 
@@ -53,7 +53,7 @@
         .word {
             font-family: var(--font-family-monospace);
             text-align: center;
-            font-size: 0.8em;
+            font-size: 0.7em;
         }
 
         .binary-string {
@@ -212,23 +212,23 @@
 <script>
     const wordsContainer = document.getElementById('wordsContainer');
     const tocContainer = document.getElementById('tocContainer');
-    const width = 50;
-    const height = 100;
+    const width = 40;
+    const height = 2 * 40;
     const inset = 5;
     const lines = [
-        [inset, 0, 50 - inset, 0],
-        [0, inset, 0, 50 - inset],
-        [inset, inset, 50 - inset, 50 - inset],
-        [50 - inset, inset, inset, 50 - inset],
-        [50, inset, 50, 50 - inset],
+        [inset, 0, width - inset, 0],
+        [0, inset, 0, width - inset],
+        [inset, inset, width - inset, width - inset],
+        [width - inset, inset, inset, width - inset],
+        [width, inset, width, width - inset],
 
-        [inset, 50, 50 - inset, 50],
-        [0, 50 + inset, 0, 100 - inset],
-        [inset, 50 + inset, 50 - inset, 100 - inset],
-        [50 - inset, 50 + inset, inset, 100 - inset],
-        [50, 50 + inset, 50, 100 - inset],
+        [inset, width, width - inset, width],
+        [0, width + inset, 0, height - inset],
+        [inset, width + inset, width - inset, height - inset],
+        [width - inset, width + inset, inset, height - inset],
+        [width, width + inset, width, height - inset],
 
-        [inset, 100, 50 - inset, 100],
+        [inset, height, width - inset, height],
     ];
     const binaryLength = lines.length;
 
