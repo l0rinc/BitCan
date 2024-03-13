@@ -23,6 +23,7 @@
         h1 {
             margin: 1em 0;
             font-size: 1.5em;
+            text-align: center;
         }
 
         .word-box {
@@ -40,14 +41,9 @@
         }
 
         .word-box.smaller {
-            height: 6.2em;
+            height: 6em;
+            float: left;
             margin-right: 1em;
-        }
-
-        .content-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
         }
 
         .word {
@@ -160,54 +156,54 @@
 </head>
 <body>
 <div>
-    <div class="content-container">
-        <div class="word-box smaller" id="animationContainer"></div>
-        <article>
-            <h1>BitCan: DIY Bitcoin Seed Storage</h1>
-            <p>Welcome to BitCan, the resilient and economical solution for securing your <a href="https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki" target="_blank">Bitcoin mnemonic seed phrases</a>.</p>
-            <p>Leveraging common materials and tools (i.e. beer can with screwdriver), BitCan offers a robust and lasting repository for Bitcoin wallet recovery information.</p>
-            <p>Each glyph below corresponds to a word from the BIP39 list, the industry standard for wallet recovery seed generation, circumventing paper backup fragility and ensuring durability against physical adversity.</p>
+    <article>
+        <h1>BitCan: DIY Bitcoin Seed Storage</h1>
+        <div class="article-animation-container">
+            <div class="word-box smaller" id="animationContainer"></div>
+        </div>
+        <p>Welcome to BitCan, the resilient and economical solution for securing your <a href="https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki" target="_blank">Bitcoin mnemonic seed phrases</a>.</p>
+        <p>Leveraging common materials and tools (i.e. beer can with screwdriver), BitCan offers a robust and lasting repository for Bitcoin wallet recovery information.</p>
+        <p>Each glyph below corresponds to a word from the BIP39 list, the industry standard for wallet recovery seed generation, circumventing paper backup fragility and ensuring durability against physical adversity.</p>
 
-            <details>
-                <summary>Encoding Instructions</summary>
-                <ol>
-                    <li>Securely generate your mnemonic seed phrase using a trusted offline hardware wallet.</li>
-                    <li>Transcribe your 12/24-word phrase onto paper, aligning the words with their corresponding glyphs.</li>
-                    <li>Depict each glyph with precision, cross-referencing the list provided. Confirm accuracy by reading the sequence in reverse.</li>
-                    <li>Transform a discarded beer can into a flat metal sheet.</li>
-                    <li>On the metal, mark a grid for the glyphs uniformly, and sketch the designs lightly with a pencil.</li>
-                    <li>Use a sturdy tool, like a screwdriver, to etch the glyphs onto the metal, tracing over your pencil lines.</li>
-                    <li>Ensure each glyph is distinct and accurately corresponds to your BIP39 phrase. Test by decoding the glyphs.</li>
-                    <li>Store the etched metal securely and discretely for safety and privacy.</li>
-                </ol>
-                <div class="centered-images">
-                    <img src="img/IMG_3697.jpg" alt=""/>
-                    <img src="img/IMG_3699.jpg" alt=""/>
-                    <img src="img/IMG_3700.jpg" alt=""/>
-                    <img src="img/IMG_3701.jpg" alt=""/>
-                    <img src="img/IMG_3702.jpg" alt=""/>
-                    <img src="img/IMG_3704.jpg" alt=""/>
-                    <img src="img/IMG_3708.jpg" alt=""/>
-                </div>
-            </details>
-            <details>
-                <summary>Decoding Instructions</summary>
-                <ol>
-                    <li>Begin with your etched metal sheet that has all your glyphs.</li>
-                    <li>For each glyph, focus on the last (11th) line position (the bottom horizontal line).</li>
-                    <li>If the line is present, the corresponding word is in the second half of the BIP39 word list; if it's absent, it is in the first half.</li>
-                    <li>Continue doing this for each line (binary search approach), moving from the rightmost line to the leftmost line of the glyph.</li>
-                    <li>With each step, you divide the current section of the word list in half again, choosing the second half if the line is present and the first half if it is absent.</li>
-                    <li>Repeat this process for each glyph until you have reconstructed your entire mnemonic seed phrase.</li>
-                </ol>
-            </details>
+        <details>
+            <summary>Encoding Instructions</summary>
+            <ol>
+                <li>Securely generate your mnemonic seed phrase using a trusted offline hardware wallet.</li>
+                <li>Transcribe your 12/24-word phrase onto paper, aligning the words with their corresponding glyphs.</li>
+                <li>Depict each glyph with precision, cross-referencing the list provided. Confirm accuracy by reading the sequence in reverse.</li>
+                <li>Transform a discarded beer can into a flat metal sheet.</li>
+                <li>On the metal, mark a grid for the glyphs uniformly, and sketch the designs lightly with a pencil.</li>
+                <li>Use a sturdy tool, like a screwdriver, to etch the glyphs onto the metal, tracing over your pencil lines.</li>
+                <li>Ensure each glyph is distinct and accurately corresponds to your BIP39 phrase. Test by decoding the glyphs.</li>
+                <li>Store the etched metal securely and discretely for safety and privacy.</li>
+            </ol>
+            <div class="centered-images">
+                <img src="img/IMG_3697.jpg" alt=""/>
+                <img src="img/IMG_3699.jpg" alt=""/>
+                <img src="img/IMG_3700.jpg" alt=""/>
+                <img src="img/IMG_3701.jpg" alt=""/>
+                <img src="img/IMG_3702.jpg" alt=""/>
+                <img src="img/IMG_3704.jpg" alt=""/>
+                <img src="img/IMG_3708.jpg" alt=""/>
+            </div>
+        </details>
+        <details>
+            <summary>Decoding Instructions</summary>
+            <ol>
+                <li>Begin with your etched metal sheet that has all your glyphs.</li>
+                <li>For each glyph, focus on the last (11th) line position (the bottom horizontal line).</li>
+                <li>If the line is present, the corresponding word is in the second half of the BIP39 word list; if it's absent, it is in the first half.</li>
+                <li>Continue doing this for each line (binary search approach), moving from the rightmost line to the leftmost line of the glyph.</li>
+                <li>With each step, you divide the current section of the word list in half again, choosing the second half if the line is present and the first half if it is absent.</li>
+                <li>Repeat this process for each glyph until you have reconstructed your entire mnemonic seed phrase.</li>
+            </ol>
+        </details>
 
-            <p>BitCan's inexpensive method provides enhanced protection for your wallet's seed phrase from threats like moisture and higher temperatures, with an added layer of security through obscurity.</p>
-        </article>
-    </div>
-    <div id="tocContainer"></div>
-    <div id="wordsContainer"></div>
+        <p>BitCan's inexpensive method provides enhanced protection for your wallet's seed phrase from threats like moisture and higher temperatures, with an added layer of security through obscurity.</p>
+    </article>
 </div>
+<div id="tocContainer"></div>
+<div id="wordsContainer"></div>
 
 <script>
     const wordsContainer = document.getElementById('wordsContainer');
