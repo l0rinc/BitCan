@@ -160,7 +160,7 @@
 <body>
 <div>
     <div class="content-container">
-        <div class="word-box smaller" id="animationContainer1"></div>
+        <div class="word-box smaller" id="animationContainer"></div>
         <article>
             <h1>BitCan: DIY Bitcoin Seed Storage</h1>
             <p>Welcome to BitCan, the resilient and economical solution for securing your <a href="https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki" target="_blank">Bitcoin mnemonic seed phrases</a>.</p>
@@ -203,7 +203,6 @@
 
             <p>BitCan's inexpensive method provides enhanced protection for your wallet's seed phrase from threats like moisture and higher temperatures, with an added layer of security through obscurity.</p>
         </article>
-        <div class="word-box smaller" id="animationContainer2"></div>
     </div>
     <div id="tocContainer"></div>
     <div id="wordsContainer"></div>
@@ -213,7 +212,7 @@
     const wordsContainer = document.getElementById('wordsContainer');
     const tocContainer = document.getElementById('tocContainer');
     const width = 40;
-    const height = 2 * 40;
+    const height = 2 * width;
     const inset = 5;
     const lines = [
         [inset, 0, width - inset, 0],
@@ -232,20 +231,25 @@
     ];
     const binaryLength = lines.length;
 
-    let currentIndexes = [0, binaryLength - 1];
+    let currentIndex = 0;
+    let direction = 1; // This will determine the direction of incrementing or decrementing
+
+    function drawCurrent(animationContainer) {
+        animationContainer.innerHTML = '';
+
+        renderWordAndGlyph(animationContainer, "", 1 << currentIndex);
+
+        currentIndex += direction;
+        if (currentIndex === binaryLength - 1 || currentIndex === 0) {
+            direction *= -1; // Reverse the direction
+        }
+    }
+
+    setInterval(() => drawCurrent(document.getElementById('animationContainer')), 500);
 
     function asBinary(num) {
         return num.toString(2).padStart(binaryLength, '0');
     }
-
-    function drawCurrent(animationContainer, index, direction) {
-        animationContainer.innerHTML = '';
-        renderWordAndGlyph(animationContainer, "", 1 << currentIndexes[index]);
-        currentIndexes[index] = (binaryLength + currentIndexes[index] + direction) % binaryLength;
-    }
-
-    setInterval(drawCurrent, 500, document.getElementById('animationContainer1'), 0, 1);
-    setInterval(drawCurrent, 500, document.getElementById('animationContainer2'), 1, -1);
 
     function renderWordAndGlyph(container, word, index) {
         const wordElement = document.createElement('div');
