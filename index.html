@@ -14,13 +14,13 @@
 
         body {
             font-family: Arial, sans-serif;
-            margin: 0.3em;
             padding: 0.6em;
             background: var(--background-gradient);
+            max-width: 80em;
+            margin: 0.3em auto;
         }
 
         article {
-            max-width: 50em;
             margin: 0 auto;
             font-size: 1rem;
         }
@@ -38,6 +38,19 @@
             margin: 0.2em;
             width: 3em;
             height: 8.3em;
+        }
+
+        .content-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        h1 {
+            white-space: nowrap;
+            margin: 1em 0;
+            font-size: 1.5em;
         }
 
         .word {
@@ -136,7 +149,11 @@
 <body>
 <div>
     <article>
-        <h1>BitCan: ‘Free as in Beer’ Bitcoin Seed Storage</h1>
+        <div class="content-container">
+            <div class="word-box" id="animationContainer1"></div>
+            <h1>BitCan: ‘Free as in Beer’, DIY Bitcoin Seed Storage</h1>
+            <div class="word-box" id="animationContainer2"></div>
+        </div>
         <p>Welcome to BitCan, the resilient and economical solution for securing your <a href="https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki" target="_blank">BIP39 mnemonic seed phrases</a>.</p>
         <p>Leveraging common materials, BitCan offers a robust and lasting repository for Bitcoin wallet recovery information.</p>
         <p>Each glyph below corresponds to a word from the BIP39 list, the industry standard for wallet recovery seed generation, circumventing paper backup fragility and ensuring durability against physical adversity.</p>
@@ -177,7 +194,6 @@
 
         <p>BitCan's inexpensive method provides enhanced protection for your wallet's seed phrase from threats like moisture and higher temperatures, with an added layer of security through obscurity.</p>
     </article>
-
     <div id="tocContainer"></div>
     <div id="wordsContainer"></div>
 </div>
@@ -185,6 +201,66 @@
 <script>
     const wordsContainer = document.getElementById('wordsContainer');
     const tocContainer = document.getElementById('tocContainer');
+    const width = 50;
+    const height = 100;
+    const inset = 5;
+    const lines = [
+        [inset, 0, 50 - inset, 0],
+        [0, inset, 0, 50 - inset],
+        [inset, inset, 50 - inset, 50 - inset],
+        [50 - inset, inset, inset, 50 - inset],
+        [50, inset, 50, 50 - inset],
+
+        [inset, 50, 50 - inset, 50],
+        [0, 50 + inset, 0, 100 - inset],
+        [inset, 50 + inset, 50 - inset, 100 - inset],
+        [50 - inset, 50 + inset, inset, 100 - inset],
+        [50, 50 + inset, 50, 100 - inset],
+
+        [inset, 100, 50 - inset, 100],
+    ];
+    const binaryLength = lines.length;
+
+    let currentIndexes = [0, binaryLength - 1];
+
+    function asBinary(num) {
+        return num.toString(2).padStart(binaryLength, '0');
+    }
+
+    function drawCurrent(animationContainer, index, direction) {
+        animationContainer.innerHTML = '';
+        renderWordAndGlyph(animationContainer, "", 1 << currentIndexes[index]);
+        currentIndexes[index] = (binaryLength + currentIndexes[index] + direction) % binaryLength;
+    }
+
+    setInterval(drawCurrent, 500, document.getElementById('animationContainer1'), 0, 1);
+    setInterval(drawCurrent, 500, document.getElementById('animationContainer2'), 1, -1);
+
+    function renderWordAndGlyph(container, word, index) {
+        const wordElement = document.createElement('div');
+        wordElement.className = 'word';
+
+        if (word) {
+            const strongElement = document.createElement('strong');
+            strongElement.classList.add('strong-word-part');
+            strongElement.textContent = word.substring(0, 4);
+            wordElement.appendChild(strongElement);
+            wordElement.appendChild(document.createTextNode(word.substring(4)));
+            wordElement.appendChild(document.createElement('br'));
+        }
+
+        const binaryString = asBinary(index);
+        const binaryStringElement = document.createElement('span');
+        binaryStringElement.className = 'binary-string';
+        binaryStringElement.innerHTML = binaryString.replaceAll('1', '<strong>1</strong>');
+        wordElement.appendChild(binaryStringElement);
+
+        container.appendChild(wordElement);
+
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        drawChar(svg, binaryString.split('').reverse().join(''));
+        container.appendChild(svg);
+    }
 
     function drawLine(svg, x1, y1, x2, y2, isBold) {
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -197,39 +273,7 @@
         svg.appendChild(line);
     }
 
-    function renderWordAndGlyph(container, word, index) {
-        const binaryString = index.toString(2).padStart(11, '0');
-
-        const wordElement = document.createElement('div');
-        wordElement.className = 'word';
-
-        const strongElement = document.createElement('strong');
-        strongElement.classList.add('strong-word-part');
-        strongElement.textContent = word.substring(0, 4);
-        wordElement.appendChild(strongElement);
-
-        const restOfWordText = document.createTextNode(word.substring(4));
-        wordElement.appendChild(restOfWordText);
-
-        const binaryStringElement = document.createElement('span');
-        binaryStringElement.className = 'binary-string';
-        binaryStringElement.innerHTML = binaryString.replaceAll('1', '<strong>1</strong>');
-
-        wordElement.appendChild(document.createElement('br'));
-        wordElement.appendChild(binaryStringElement);
-        container.appendChild(wordElement);
-
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        drawChar(svg, binaryString.split('').reverse().join(''));
-        container.appendChild(svg);
-    }
-
-
     function drawChar(svg, binaryString) {
-        const width = 50;
-        const height = 100;
-
-        // Create a rect element and set its attributes
         const backgroundRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         backgroundRect.setAttribute('x', 0);
         backgroundRect.setAttribute('y', 0);
@@ -240,23 +284,6 @@
 
         // Append the rectangle as the first child of the SVG
         svg.appendChild(backgroundRect);
-
-        const inset = 5;
-        const lines = [
-            [inset, 0, 50 - inset, 0],
-            [0, inset, 0, 50 - inset],
-            [inset, inset, 50 - inset, 50 - inset],
-            [50 - inset, inset, inset, 50 - inset],
-            [50, inset, 50, 50 - inset],
-
-            [inset, 50, 50 - inset, 50],
-            [0, 50 + inset, 0, 100 - inset],
-            [inset, 50 + inset, 50 - inset, 100 - inset],
-            [50 - inset, 50 + inset, inset, 100 - inset],
-            [50, 50 + inset, 50, 100 - inset],
-
-            [inset, 100, 50 - inset, 100],
-        ];
 
         "01".split('').forEach(char => {
             lines.forEach((points, index) => {
@@ -292,7 +319,7 @@
 
                     const wordBox = document.createElement('div');
                     wordBox.className = 'word-box';
-                    renderWordAndGlyph(wordBox, word, index.toString(2).padStart(11, '0'));
+                    renderWordAndGlyph(wordBox, word, asBinary(index));
                     wordsContainer.appendChild(wordBox);
                 });
             });
