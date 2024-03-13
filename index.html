@@ -7,7 +7,7 @@
     <style>
         :root {
             --background-gradient: radial-gradient(circle, white 0%, rgb(184, 183, 183) 100%);
-            --box-shadow: 0 0.3em 0.5em rgba(0, 0, 0, 0.1);
+            --box-shadow: 0 0.3em 0.4em rgba(0, 0, 0, 0.1);
             --light-grey-border: 0.1em solid #ccc;
             --font-family-monospace: 'Courier New', monospace;
         }
@@ -82,6 +82,7 @@
             max-height: 15em;
             width: auto;
             height: auto;
+            box-shadow: var(--box-shadow);
         }
 
         .strong-word-part {
@@ -180,13 +181,13 @@
                     <li>Store the etched metal securely and discretely for safety and privacy.</li>
                 </ol>
                 <div class="centered-images">
-                    <img src="img/IMG_3697.jpg" width=250 alt=""/>
-                    <img src="img/IMG_3699.jpg" width=250 alt=""/>
-                    <img src="img/IMG_3700.jpg" width=250 alt=""/>
-                    <img src="img/IMG_3701.jpg" width=250 alt=""/>
-                    <img src="img/IMG_3702.jpg" width=250 alt=""/>
-                    <img src="img/IMG_3704.jpg" width=250 alt=""/>
-                    <img src="img/IMG_3708.jpg" width=250 alt=""/>
+                    <img src="img/IMG_3697.jpg" alt=""/>
+                    <img src="img/IMG_3699.jpg" alt=""/>
+                    <img src="img/IMG_3700.jpg" alt=""/>
+                    <img src="img/IMG_3701.jpg" alt=""/>
+                    <img src="img/IMG_3702.jpg" alt=""/>
+                    <img src="img/IMG_3704.jpg" alt=""/>
+                    <img src="img/IMG_3708.jpg" alt=""/>
                 </div>
             </details>
             <details>
@@ -232,7 +233,7 @@
     const binaryLength = lines.length;
 
     let currentIndex = 0;
-    let direction = 1; // This will determine the direction of incrementing or decrementing
+    let direction = 1;
 
     function drawCurrent(animationContainer) {
         animationContainer.innerHTML = '';
@@ -241,7 +242,7 @@
 
         currentIndex += direction;
         if (currentIndex === binaryLength - 1 || currentIndex === 0) {
-            direction *= -1; // Reverse the direction
+            direction *= -1;
         }
     }
 
