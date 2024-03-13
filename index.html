@@ -191,16 +191,15 @@
         <details>
             <summary>Decoding Instructions</summary>
             <ol>
-                <li>Begin with your etched metal sheet that has all your glyphs.</li>
-                <li>For each glyph, focus on the last (11th) line position (the bottom horizontal line).</li>
-                <li>If the line is present, the corresponding word is in the second half of the BIP39 word list; if it's absent, it is in the first half.</li>
-                <li>Continue doing this for each line (binary search approach), moving from the rightmost line to the leftmost line of the glyph.</li>
-                <li>With each step, you divide the current section of the word list in half again, choosing the second half if the line is present and the first half if it is absent.</li>
-                <li>Repeat this process for each glyph until you have reconstructed your entire mnemonic seed phrase.</li>
+                <li>First, transcribe all glyphs carefully onto a sheet of paper. This will serve as a more reliable reference than working directly from the plate.</li>
+                <li>Identify the bottom square of each glyph first, as it provides a stable starting point for the decoding process.</li>
+                <li>Then, identify the top square of the glyph to refine your search within the identified section of the word list.</li>
+                <li>Alternatively, you can use binary search to navigate through the word list, since each line in the glyph halves the search area</li>
+                <li>Verify the transcribed seed phrase with your wallet to ensure its accuracy and integrity.</li>
             </ol>
         </details>
-
-        <p>BitCan's inexpensive method provides enhanced protection for your wallet's seed phrase from threats like moisture and higher temperatures, with an added layer of security through obscurity.</p>
+        <p>BitCan's cost-effective approach offers increased protection for your wallet's seed phrase against common hazards such as moisture and minor fires.</p>
+        <p>Additionally, it affords an extra measure of security through obscurity — making it less likely for someone unfamiliar (like a cleaning person or a burglar) to recognize and understand its significance.</p>
     </article>
 </div>
 <div id="tocContainer"></div>
