@@ -245,7 +245,7 @@
         renderWordAndGlyph(animationContainer, "", 1 << currentIndex);
 
         currentIndex += direction;
-        if (currentIndex === binaryLength - 1 || currentIndex === 0) {
+        if (currentIndex % (binaryLength - 1) === 0) {
             direction *= -1;
         }
     }
