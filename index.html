@@ -86,7 +86,7 @@
             cursor: pointer;
         }
 
-        .strong-word-part {
+        .right-margin {
             margin-right: 1px;
         }
 
@@ -176,7 +176,7 @@
             <summary>Encoding Instructions</summary>
             <ol>
                 <li>Securely generate your mnemonic seed phrase using a trusted, offline hardware wallet.</li>
-                <li>Transcribe your 12- or 24-word phrase onto paper, ensuring alignment with the corresponding glyphs.</li>
+                <li>Transcribe your 12/24-word phrase onto paper, ensuring alignment with the corresponding glyphs.</li>
                 <li>Depict each glyph with precision by cross-referencing the provided list. Verify accuracy by reviewing the sequence in reverse.</li>
                 <li>Flatten a thin aluminum (beer) can into a sheet.</li>
                 <li>Mark a grid uniformly on the metal, and sketch the glyph designs lightly with a pencil.</li>
@@ -257,23 +257,25 @@
     }
 
     function renderWordAndGlyph(container, word, index) {
-        const wordElement = document.createElement('div');
+        const wordElement = document.createElement('span');
         wordElement.className = 'word';
 
-        if (word) {
-            const strongElement = document.createElement('strong');
-            strongElement.classList.add('strong-word-part');
-            strongElement.textContent = word.substring(0, 4);
-            wordElement.appendChild(strongElement);
-            wordElement.appendChild(document.createTextNode(word.substring(4)));
-            wordElement.appendChild(document.createElement('br'));
+        if (word.length) {
+            wordElement.innerHTML += (
+                `<strong class="right-margin">${word.substring(0, 4)}</strong>` +
+                `${word.substring(4)}` +
+                `<br/>`
+            );
         }
 
         const binaryString = asBinary(index);
-        const binaryStringElement = document.createElement('span');
-        binaryStringElement.className = 'binary-string';
-        binaryStringElement.innerHTML = binaryString.replaceAll('1', '<strong>1</strong>');
-        wordElement.appendChild(binaryStringElement);
+        wordElement.innerHTML += (
+            `<span class="binary-string">` +
+            `<span class="right-margin">${binaryString.substring(0, 1)}</span>` +
+            `<span class="right-margin">${binaryString.substring(1, 6)}</span>` +
+            `${binaryString.substring(6)}` +
+            `</span>`
+        ).replaceAll('1', '<strong>1</strong>');
 
         container.appendChild(wordElement);
 
