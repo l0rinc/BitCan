@@ -93,16 +93,8 @@
             border-radius: 0.5em;
         }
 
-        .template-canvas-container {
-            display: flex;
-            justify-content: center;
+        .template-svg {
             margin-top: 1em;
-        }
-
-        .template-canvas {
-            border: 1px solid #ccc;
-            margin-top: 1em;
-            box-shadow: var(--box-shadow);
             cursor: pointer;
         }
 
@@ -241,9 +233,7 @@
                         <label><input type="range" name="scale" min="1" max="4" value="2">Scale</label>
                     </div>
                 </div>
-                <div class="template-canvas-container">
-                    <canvas id="templateCanvas" class="template-canvas"></canvas>
-                </div>
+                <div id="template-svg-container"></div>
             </details>
         </details>
         <details class="section">
@@ -334,33 +324,33 @@
         container.appendChild(svg);
     }
 
-    function drawLine(svg, x1, y1, x2, y2, isBold) {
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', x1);
-        line.setAttribute('y1', y1);
-        line.setAttribute('x2', x2);
-        line.setAttribute('y2', y2);
-        line.setAttribute('stroke-linecap', 'round');
-        line.classList.add(isBold ? 'bold' : 'light');
-        svg.appendChild(line);
-    }
+    function drawChar(svg, binaryString, drawRect = true, x = 0, y = 0) {
+        if (drawRect) {
+            const background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            background.setAttribute('x', x);
+            background.setAttribute('y', y);
+            background.setAttribute('width', width);
+            background.setAttribute('height', height);
+            background.setAttribute('fill', 'OldLace');
+            background.setAttribute('rx', 3);
+            svg.appendChild(background);
+        }
 
-    function drawChar(svg, binaryString) {
-        const backgroundRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        backgroundRect.setAttribute('x', 0);
-        backgroundRect.setAttribute('y', 0);
-        backgroundRect.setAttribute('width', width);
-        backgroundRect.setAttribute('height', height);
-        backgroundRect.setAttribute('fill', 'OldLace');
-        backgroundRect.setAttribute('rx', 3);
-
-        // Append the rectangle as the first child of the SVG
-        svg.appendChild(backgroundRect);
+        function drawLine(svg, x1, y1, x2, y2, isBold) {
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', x1);
+            line.setAttribute('y1', y1);
+            line.setAttribute('x2', x2);
+            line.setAttribute('y2', y2);
+            line.setAttribute('stroke-linecap', 'round');
+            line.classList.add(isBold ? 'bold' : 'light');
+            svg.appendChild(line);
+        }
 
         "01".split('').forEach(char => {
             lines.forEach((points, index) => {
                 if (binaryString[index] === char) {
-                    drawLine(svg, points[0], points[1], points[2], points[3], char === '1');
+                    drawLine(svg, x + points[0], y + points[1], x + points[2], y + points[3], char === '1');
                 }
             });
         });
@@ -399,17 +389,24 @@
 
     fetchAndDisplayWords();
 
-    const canvas = document.getElementById('templateCanvas');
-    const ctx = canvas.getContext('2d');
-    drawTemplate();
+    function drawTemplateSVG() {
+        function drawPrintMark(svg, x, y, glyphSize, lineWidth) {
+            function createSVGLine(svg, x1, y1, x2, y2, lineWidth) {
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", x1);
+                line.setAttribute("y1", y1);
+                line.setAttribute("x2", x2);
+                line.setAttribute("y2", y2);
+                line.setAttribute("stroke", "black");
+                line.setAttribute("stroke-width", lineWidth);
+                line.setAttribute("stroke-linecap", "round");
+                svg.appendChild(line);
+            }
 
-    canvas.addEventListener('click', () =>
-        window.open().document.body.innerHTML = `<img src="${(canvas.toDataURL('image/png'))}" style="max-width:100%;" alt="">`);
+            createSVGLine(svg, x, y - glyphSize + lineWidth, x, y + glyphSize - lineWidth, lineWidth);
+            createSVGLine(svg, x - glyphSize + lineWidth, y, x + glyphSize - lineWidth, y, lineWidth);
+        }
 
-    document.querySelectorAll('input[name="printMarks"], input[name="orientation"], input[name="layout"], input[name="scale"]')
-        .forEach(input => input.addEventListener('change', drawTemplate));
-
-    function drawTemplate() {
         const glyphWidth = width;
         const inset = 20;
         const lineWidth = 2;
@@ -425,20 +422,28 @@
         const totalWidth = inset * 2 + glyphWidth * (glyphsPerCol * 2 - 1);
         const totalHeight = inset * 2 + glyphWidth * (glyphsPerRow * 3 - 1);
 
-        canvas.width = totalWidth * scale;
-        canvas.height = totalHeight * scale;
+        function prepareTemplate() {
+            const template = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            template.classList.add('template-svg');
+            template.setAttribute("width", totalWidth * scale);
+            template.setAttribute("height", totalHeight * scale);
+            template.setAttribute("viewBox", `0 0 ${totalWidth} ${totalHeight}`);
 
-        ctx.scale(scale, scale);
-        ctx.fillStyle = 'white';
-        ctx.fillRect(0, 0, canvas.width / scale, canvas.height / scale);
-        ctx.strokeStyle = '#ccc';
-        ctx.strokeRect(0, 0, canvas.width / scale, canvas.height / scale);
+            const background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            background.setAttribute('width', '100%');
+            background.setAttribute('height', '100%');
+            background.setAttribute('fill', 'white');
+            background.setAttribute('stroke', 'grey');
+            template.appendChild(background);
+            return template;
+        }
 
+        const template = prepareTemplate();
         for (let row = 0; row < glyphsPerRow; row++) {
             for (let col = 0; col < glyphsPerCol; col++) {
                 const x = inset + col * 2 * glyphWidth;
                 const y = inset + row * 3 * glyphWidth;
-                drawCharOnCanvas(ctx, '00000000000', x, y, lineWidth);
+                drawChar(template, '00000000000', false, x, y);
             }
         }
 
@@ -448,36 +453,40 @@
                 for (let col = 1; col < glyphsPerCol; col++) {
                     const x = offsetX + (col - 1) * glyphWidth * 2;
                     const y = offsetY + (row - 1) * glyphWidth * 3;
-                    drawPrintMark(ctx, x, y, glyphWidth / 2, lineWidth);
+                    drawPrintMark(template, x, y, glyphWidth / 2, lineWidth);
                 }
             }
         }
-    }
 
-    function drawCharOnCanvas(ctx, binaryString, x, y, lineWidth) {
-        lines.forEach((points, _) => {
-            ctx.beginPath();
-            ctx.moveTo(x + points[0], y + points[1]);
-            ctx.lineTo(x + points[2], y + points[3]);
-            ctx.strokeStyle = '#ccc';
-            ctx.lineCap = 'round';
-            ctx.lineWidth = lineWidth;
-            ctx.stroke();
+
+        template.addEventListener('click', () => {
+            const target = template.cloneNode(true)
+            const cssText = `
+                line.light {
+                    stroke: darkgrey;
+                    stroke-width: 1;
+                }
+            `;
+
+            const styleElement = document.createElementNS("http://www.w3.org/2000/svg", "style");
+            styleElement.textContent = cssText;
+            target.insertBefore(styleElement, target.firstChild);
+
+            const serializer = new XMLSerializer();
+            const svgStr = serializer.serializeToString(target);
+            const blob = new Blob([svgStr], {type: "image/svg+xml"});
+            window.open(URL.createObjectURL(blob), '_blank');
         });
+
+        const svgContainer = document.getElementById('template-svg-container');
+        svgContainer.innerHTML = '';
+        svgContainer.appendChild(template);
     }
 
-    function drawPrintMark(ctx, x, y, glyphSize, lineWidth) {
-        const lineLength = glyphSize;
-        ctx.beginPath();
-        ctx.moveTo(x - lineLength + lineWidth, y);
-        ctx.lineTo(x + lineLength - lineWidth, y);
-        ctx.moveTo(x, y - lineLength + lineWidth);
-        ctx.lineTo(x, y + lineLength - lineWidth);
-        ctx.strokeStyle = 'black';
-        ctx.lineCap = 'round';
-        ctx.lineWidth = lineWidth;
-        ctx.stroke();
-    }
+    document.querySelectorAll('input[name="printMarks"], input[name="orientation"], input[name="layout"], input[name="scale"]')
+        .forEach(input => input.addEventListener('change', drawTemplateSVG));
+
+    drawTemplateSVG();
 </script>
 </body>
 </html>
