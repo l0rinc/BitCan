@@ -268,7 +268,7 @@
     const tocContainer = document.getElementById('tocContainer');
     const width = 40;
     const height = 2 * width;
-    const lineInset = 5;
+    const lineInset = 5.5;
     const lines = [
         [lineInset, 0, width - lineInset, 0],
         [0, lineInset, 0, width - lineInset],
@@ -410,17 +410,20 @@
         .forEach(input => input.addEventListener('change', drawTemplate));
 
     function drawTemplate() {
+        const glyphWidth = width;
+        const inset = 20;
+        const lineWidth = 2;
+
         const printMarks = document.querySelector('input[name="printMarks"]').checked;
         const orientation = document.querySelector('input[name="orientation"]:checked').value;
         const layout = document.querySelector('input[name="layout"]:checked').value;
-        const scale = parseFloat(document.querySelector('input[name="scale"]').value) / 2;
+        const scale = parseFloat(document.querySelector('input[name="scale"]').value) / 3;
 
         let [glyphsPerRow, glyphsPerCol] = layout === '2x6' ? [2, 6] : [3, 4];
         if (orientation === 'portrait') [glyphsPerRow, glyphsPerCol] = [glyphsPerCol, glyphsPerRow];
 
-        const inset = 5;
-        const totalWidth = inset * 2 + width * (glyphsPerCol * 2 - 1);
-        const totalHeight = inset * 2 + width * (glyphsPerRow * 3 - 1);
+        const totalWidth = inset * 2 + glyphWidth * (glyphsPerCol * 2 - 1);
+        const totalHeight = inset * 2 + glyphWidth * (glyphsPerRow * 3 - 1);
 
         canvas.width = totalWidth * scale;
         canvas.height = totalHeight * scale;
@@ -428,49 +431,51 @@
         ctx.scale(scale, scale);
         ctx.fillStyle = 'white';
         ctx.fillRect(0, 0, canvas.width / scale, canvas.height / scale);
+        ctx.strokeStyle = '#ccc';
+        ctx.strokeRect(0, 0, canvas.width / scale, canvas.height / scale);
 
         for (let row = 0; row < glyphsPerRow; row++) {
             for (let col = 0; col < glyphsPerCol; col++) {
-                const x = inset + col * 2 * width;
-                const y = inset + row * 3 * width;
-                drawCharOnCanvas(ctx, '00000000000', x, y, width);
+                const x = inset + col * 2 * glyphWidth;
+                const y = inset + row * 3 * glyphWidth;
+                drawCharOnCanvas(ctx, '00000000000', x, y, lineWidth);
             }
         }
 
         if (printMarks) {
-            const [offsetX, offsetY] = [inset + width * 1.5, inset + width * 2.5];
+            const [offsetX, offsetY] = [inset + glyphWidth * 1.5, inset + glyphWidth * 2.5];
             for (let row = 1; row < glyphsPerRow; row++) {
                 for (let col = 1; col < glyphsPerCol; col++) {
-                    const x = offsetX + (col - 1) * width * 2;
-                    const y = offsetY + (row - 1) * width * 3;
-                    drawPrintMark(ctx, x, y, width / 2);
+                    const x = offsetX + (col - 1) * glyphWidth * 2;
+                    const y = offsetY + (row - 1) * glyphWidth * 3;
+                    drawPrintMark(ctx, x, y, glyphWidth / 2, lineWidth);
                 }
             }
         }
     }
 
-    function drawCharOnCanvas(ctx, binaryString, x, y, size) {
-        ctx.save();
+    function drawCharOnCanvas(ctx, binaryString, x, y, lineWidth) {
         lines.forEach((points, _) => {
             ctx.beginPath();
             ctx.moveTo(x + points[0], y + points[1]);
             ctx.lineTo(x + points[2], y + points[3]);
-            ctx.strokeStyle = 'lightgrey';
-            ctx.lineWidth = size * 0.05;
+            ctx.strokeStyle = '#ccc';
+            ctx.lineCap = 'round';
+            ctx.lineWidth = lineWidth;
             ctx.stroke();
         });
-        ctx.restore();
     }
 
-    function drawPrintMark(ctx, x, y, glyphSize) {
+    function drawPrintMark(ctx, x, y, glyphSize, lineWidth) {
         const lineLength = glyphSize;
         ctx.beginPath();
-        ctx.moveTo(x - lineLength, y);
-        ctx.lineTo(x + lineLength, y);
-        ctx.moveTo(x, y - lineLength);
-        ctx.lineTo(x, y + lineLength);
+        ctx.moveTo(x - lineLength + lineWidth, y);
+        ctx.lineTo(x + lineLength - lineWidth, y);
+        ctx.moveTo(x, y - lineLength + lineWidth);
+        ctx.lineTo(x, y + lineLength - lineWidth);
         ctx.strokeStyle = 'black';
-        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.lineWidth = lineWidth;
         ctx.stroke();
     }
 </script>
