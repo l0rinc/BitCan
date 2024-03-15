@@ -73,8 +73,9 @@
         .centered-images {
             display: flex;
             justify-content: center;
+            align-items: center;
             flex-wrap: wrap;
-            gap: 0.5em;
+            gap: 1em;
         }
 
         .centered-images img {
@@ -179,62 +180,45 @@
         <div class="article-animation-container">
             <div class="word-box smaller" id="animationContainer"></div>
         </div>
-        <p><a href="https://github.com/paplorinc/BitCan">BitCan</a> offers a resilient and economical solution for securing your <a href="https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki" target="_blank">Bitcoin mnemonic seed phrases</a>.</p>
-        <p>By leveraging common materials and tools, such as a beer can and screwdriver, BitCan provides a robust and lasting repository for Bitcoin wallet recovery information, an improvement over traditional paper wallets.</p>
-        <p>It is intended as an affordable alternative to <a href="https://jlopp.github.io/metal-bitcoin-storage-reviews" target="_blank">more professional metal plates</a>.</p>
-        <p>Each glyph below corresponds to a word from the BIP39 list, the industry standard for wallet recovery seed generation, offering a solution that circumvents the fragility of paper backups and ensures durability against physical adversity.</p>
-        <p>BitCan's cost-effective approach offers increased protection for your wallet's seed phrase against common hazards such as moisture and minor fires.</p>
-        <p>Additionally, it affords an extra measure of security through obscurity — making it less likely for someone unfamiliar (like a cleaning person or a burglar) to recognize and understand its significance.</p>
-
-        <details class="section" open="open">
+        <p><a href="https://github.com/paplorinc/BitCan">BitCan</a> provides a durable and cost-effective solution for securing your <a href="https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki" target="_blank">Bitcoin mnemonic seed phrases</a>.</p>
+        <p>Utilizing off-the-shelf materials such as a beer can and a screwdriver, BitCan creates a resilient alternative to paper wallets for storing Bitcoin wallet recovery information.</p>
+        <p>Designed as an economical substitute for <a href="https://jlopp.github.io/metal-bitcoin-storage-reviews" target="_blank">commercially available metal plates</a>, BitCan enhances the protection of your wallet’s seed phrase from common risks, including moisture damage and exposure to heat.</p>
+        <p>Moreover, its discreet design offers additional security by making the storage medium less recognizable and understandable to those who might come across it, such as cleaning staff or potential intruders.</p>
+        <div class="section centered-images">
+            <a href="img/IMG_1.jpg" target="_blank"><img src="img/IMG_1.jpg" alt="Seed storage preparation from a repurposed tin can."/></a>
+            <a href="img/IMG_2.jpg" target="_blank"><img src="img/IMG_2.jpg" alt="Encoding the existing seed phrase into glyphs using the provided chart."/></a>
+            <a href="img/IMG_3.jpg" target="_blank"><img src="img/IMG_3.jpg" alt="Tracing glyphs using a screwdriver."/></a>
+            <a href="img/IMG_4.jpg" target="_blank"><img src="img/IMG_4.jpg" alt="Removing the sticker from the can."/></a>
+            <a href="img/IMG_5.jpg" target="_blank"><img src="img/IMG_5.jpg" alt="The completed seed plate with engraved glyphs."/></a>
+            <a href="img/IMG_6.jpg" target="_blank"><img src="img/IMG_6.jpg" alt="Final storage, plate rolled up"/></a>
+        </div>
+        <details class="section">
             <summary>Encoding Instructions</summary>
-            <ol>
-                <li>Securely generate your mnemonic seed phrase using a trusted, offline hardware wallet.</li>
-                <li>Transcribe your 12/24-word phrase onto paper, ensuring alignment with the corresponding glyphs.</li>
-                <li>Depict each glyph with precision by cross-referencing the provided list. Verify accuracy by reviewing the sequence in reverse.</li>
-                <li>Flatten a thin aluminum (beer) can into a sheet.</li>
-                <li>Mark a grid uniformly on the metal, and sketch the glyph designs lightly with a pencil.</li>
-                <li>Using a strong tool, like a screwdriver, etch the glyphs onto the metal by tracing over the pencil lines.</li>
-                <li>Consider adding printer's marks (+ signs) between the rows and columns, accommodating for possible empty glyphs and sections.</li>
-                <li>Confirm that each glyph is distinct and accurately represents your BIP39 phrase. Double-check by decoding the glyphs.</li>
-                <li>For safety and privacy, store the etched metal in a secure and discreet location.</li>
-            </ol>
-            <div class="section centered-images">
-                <a href="img/IMG_1.jpg" target="_blank"><img src="img/IMG_1.jpg" alt="Tin can before transformation into a seed storage"/></a>
-                <a href="img/IMG_2.jpg" target="_blank"><img src="img/IMG_2.jpg" alt="Top of can cut off for seed storage preparation"/></a>
-                <a href="img/IMG_3.jpg" target="_blank"><img src="img/IMG_3.jpg" alt="Seed storage planning with grid paper and laptop"/></a>
-                <a href="img/IMG_4.jpg" target="_blank"><img src="img/IMG_4.jpg" alt="Paper with glyph grid taped on a flat aluminum sheet"/></a>
-                <a href="img/IMG_5.jpg" target="_blank"><img src="img/IMG_5.jpg" alt="Tracing glyphs onto aluminum for seed storage"/></a>
-                <a href="img/IMG_6.jpg" target="_blank"><img src="img/IMG_6.jpg" alt="Aluminum sheet with etched glyphs representing seed"/></a>
-                <a href="img/IMG_7.jpg" target="_blank"><img src="img/IMG_7.jpg" alt="Final storage, storage plate rolled up"/></a>
-            </div>
-            <details class="section">
-                <summary>Sticker Template</summary>
+            <details class="section" open="open">
+                <summary>Create Sticker:</summary>
                 <p>Print the template, stick it on a tin can, draw your seed phrase on the print, then etch through the sticker with a screwdriver.</p>
-                <div class="section centered-images">
-                    <a href="img/IMG_8.jpg" target="_blank"><img src="img/IMG_8.jpg" alt=""/></a>
-                    <a href="img/IMG_9.jpg" target="_blank"><img src="img/IMG_9.jpg" alt=""/></a>
-                    <a href="img/IMG_10.jpg" target="_blank"><img src="img/IMG_10.jpg" alt=""/></a>
-                </div>
-
                 <div>
-                    <div>
-                        <label><input type="checkbox" name="printMarks" checked>Print Marks</label>
-                    </div>
-                    <div>
-                        <label><input type="radio" name="orientation" value="portrait">Portrait</label>
-                        <label><input type="radio" name="orientation" value="landscape" checked>Landscape</label>
-                    </div>
-                    <div>
-                        <label><input type="radio" name="layout" value="2x6" checked>2x6</label>
-                        <label><input type="radio" name="layout" value="3x4">3x4</label>
-                    </div>
-                    <div>
-                        <label><input type="range" name="scale" min="1" max="4" value="2">Scale</label>
-                    </div>
+                    <label><input type="radio" name="orientation" value="portrait">Portrait</label>
+                    <label><input type="radio" name="orientation" value="landscape" checked>Landscape</label>
+                    <label><input type="checkbox" name="alignmentMarks" checked>Alignment Marks</label>
+                    <label><input type="radio" name="layout" value="2x6" checked>2x6</label>
+                    <label><input type="radio" name="layout" value="3x4">3x4</label>
+                    <label><input type="range" name="scale" min="1" max="4" value="2">Scale</label>
                 </div>
                 <div id="template-svg-container"></div>
             </details>
+            <details class="section">
+                <summary>Details:</summary>
+                <ol>
+                    <li>Securely generate your mnemonic seed phrase using a trusted, offline hardware wallet.</li>
+                    <li>Flatten a thin aluminum can into a sheet and then attach the printed template to it (or draw it onto a piece of paper and affix it to the can).</li>
+                    <li>Translate the words into glyphs, ensuring each corresponds accurately to the provided list.</li>
+                    <li>Etch each glyph carefully onto the metal, double-checking for precision and verifying the sequence by reviewing it in reverse.</li>
+                    <li>Use a screwdriver for etching the glyphs into the metal.</li>
+                    <li>To ensure security and privacy, store the etched metal in a location that is both secure and discreet.</li>
+                </ol>
+            </details>
+
         </details>
         <details class="section">
             <summary>Decoding Instructions</summary>
@@ -242,7 +226,7 @@
                 <li>First, transcribe all glyphs carefully onto a sheet of paper. This will serve as a more reliable reference than working directly from the plate.</li>
                 <li>Identify the bottom square of each glyph first, as it provides a stable starting point for the decoding process.</li>
                 <li>Then, identify the top square of the glyph to refine your search within the identified section of the word list.</li>
-                <li>Alternatively, you can use binary search to navigate through the word list, since each line in the glyph halves the search area</li>
+                <li>Alternatively, you can use binary search to navigate through the word list, since each line in the glyph halves the search area.</li>
                 <li>Verify the transcribed seed phrase with your wallet to ensure its accuracy and integrity.</li>
             </ol>
         </details>
@@ -411,7 +395,7 @@
         const inset = 20;
         const lineWidth = 2;
 
-        const printMarks = document.querySelector('input[name="printMarks"]').checked;
+        const alignmentMarks = document.querySelector('input[name="alignmentMarks"]').checked;
         const orientation = document.querySelector('input[name="orientation"]:checked').value;
         const layout = document.querySelector('input[name="layout"]:checked').value;
         const scale = parseFloat(document.querySelector('input[name="scale"]').value) / 3;
@@ -447,7 +431,7 @@
             }
         }
 
-        if (printMarks) {
+        if (alignmentMarks) {
             const [offsetX, offsetY] = [inset + glyphWidth * 1.5, inset + glyphWidth * 2.5];
             for (let row = 1; row < glyphsPerRow; row++) {
                 for (let col = 1; col < glyphsPerCol; col++) {
@@ -483,7 +467,7 @@
         svgContainer.appendChild(template);
     }
 
-    document.querySelectorAll('input[name="printMarks"], input[name="orientation"], input[name="layout"], input[name="scale"]')
+    document.querySelectorAll('input[name="alignmentMarks"], input[name="orientation"], input[name="layout"], input[name="scale"]')
         .forEach(input => input.addEventListener('change', drawTemplateSVG));
 
     drawTemplateSVG();
