@@ -110,7 +110,7 @@
 
         line.light {
             stroke: darkgrey;
-            stroke-width: 0.5;
+            stroke-width: 1;
         }
 
         line.bold {
@@ -467,7 +467,7 @@
             styleElement.textContent = `
                 line.light {
                     stroke: darkgrey;
-                    stroke-width: 1;
+                    stroke-width: ${lineWidth};
                 }
             `;
             target.insertBefore(styleElement, target.firstChild);
