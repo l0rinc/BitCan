@@ -421,8 +421,8 @@
             template.setAttribute("viewBox", `${-lineWidth} ${-lineWidth} ${totalWidth + 2 * lineWidth} ${totalHeight + 2 * lineWidth}`);
 
             const background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-            background.setAttribute('width', '100%');
-            background.setAttribute('height', '100%');
+            background.setAttribute('width', totalWidth);
+            background.setAttribute('height', totalHeight);
             background.setAttribute('fill', 'white');
             background.setAttribute('stroke', 'grey');
             template.appendChild(background);
