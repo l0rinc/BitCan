@@ -210,6 +210,7 @@
                     <label><input type="radio" name="layout" value="3x4">3x4</label>
                     <label><input type="range" name="scale" min="1" max="4" value="2">Scale</label>
                     <label><input type="checkbox" name="webLink" checked>Web Link</label>
+                    <label><input type="checkbox" name="cornerMarks" checked>Corner Marks</label>
                 </div>
                 <div class="template-svg-container"></div>
             </details>
@@ -382,21 +383,16 @@
     fetchAndDisplayWords();
 
     function drawTemplateSVG() {
-        function drawPrintMark(svg, x, y, glyphSize, lineWidth) {
-            function createSVGLine(svg, x1, y1, x2, y2, lineWidth) {
-                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                line.setAttribute("x1", x1);
-                line.setAttribute("y1", y1);
-                line.setAttribute("x2", x2);
-                line.setAttribute("y2", y2);
-                line.setAttribute("stroke", "black");
-                line.setAttribute("stroke-width", lineWidth);
-                line.setAttribute("stroke-linecap", "round");
-                svg.appendChild(line);
-            }
-
-            createSVGLine(svg, x, y - glyphSize + lineWidth, x, y + glyphSize - lineWidth, lineWidth);
-            createSVGLine(svg, x - glyphSize + lineWidth, y, x + glyphSize - lineWidth, y, lineWidth);
+        function createSVGLine(svg, x1, y1, x2, y2, lineWidth) {
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("x1", x1);
+            line.setAttribute("y1", y1);
+            line.setAttribute("x2", x2);
+            line.setAttribute("y2", y2);
+            line.setAttribute("stroke", "black");
+            line.setAttribute("stroke-width", lineWidth);
+            line.setAttribute("stroke-linecap", "round");
+            svg.appendChild(line);
         }
 
         const glyphWidth = width;
@@ -408,6 +404,7 @@
         const layout = document.querySelector('input[name="layout"]:checked').value;
         const scale = parseFloat(document.querySelector('input[name="scale"]').value) / 3;
         const webLink = document.querySelector('input[name="webLink"]').checked;
+        const cornerMarks = document.querySelector('input[name="cornerMarks"]').checked;
 
         let [glyphsPerRow, glyphsPerCol] = layout === '2x6' ? [2, 6] : [3, 4];
         if (orientation === 'portrait') [glyphsPerRow, glyphsPerCol] = [glyphsPerCol, glyphsPerRow];
@@ -446,7 +443,8 @@
                 for (let col = 1; col < glyphsPerCol; col++) {
                     const x = offsetX + (col - 1) * glyphWidth * 2;
                     const y = offsetY + (row - 1) * glyphWidth * 3;
-                    drawPrintMark(template, x, y, glyphWidth / 2, lineWidth);
+                    createSVGLine(template, x, y - glyphWidth / 2 + lineWidth, x, y + glyphWidth / 2 - lineWidth, lineWidth);
+                    createSVGLine(template, x - glyphWidth / 2 + lineWidth, y, x + glyphWidth / 2 - lineWidth, y, lineWidth);
                 }
             }
         }
@@ -459,6 +457,17 @@
             textElement.setAttribute("style", "font: italic 16px Arial;");
             textElement.textContent = "https://bitcan.world";
             template.appendChild(textElement);
+        }
+
+        if (cornerMarks) {
+            createSVGLine(template, 0, 0, 0, glyphWidth / 2, lineWidth);
+            createSVGLine(template, 0, 0, glyphWidth / 2, 0, lineWidth);
+
+            createSVGLine(template, totalWidth, 0, totalWidth, glyphWidth / 2, lineWidth);
+            createSVGLine(template, totalWidth, 0, totalWidth - glyphWidth / 2, 0, lineWidth);
+
+            createSVGLine(template, 0, totalHeight, 0, totalHeight - glyphWidth / 2, lineWidth);
+            createSVGLine(template, 0, totalHeight, glyphWidth / 2, totalHeight, lineWidth);
         }
 
         template.addEventListener('click', () => {
@@ -483,7 +492,7 @@
         svgContainer.appendChild(template);
     }
 
-    document.querySelectorAll('input[name="orientation"], input[name="alignmentMarks"], input[name="layout"], input[name="scale"], input[name="webLink"]')
+    document.querySelectorAll('input[name="orientation"], input[name="alignmentMarks"], input[name="layout"], input[name="scale"], input[name="webLink"], input[name="cornerMarks"]')
         .forEach(input => input.addEventListener('input', drawTemplateSVG));
 
     drawTemplateSVG();
