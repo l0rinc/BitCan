@@ -209,6 +209,7 @@
                     <label><input type="radio" name="layout" value="2x6" checked>2x6</label>
                     <label><input type="radio" name="layout" value="3x4">3x4</label>
                     <label><input type="range" name="scale" min="1" max="4" value="2">Scale</label>
+                    <label><input type="checkbox" name="webLink" checked>Link</label>
                 </div>
                 <div class="template-svg-container"></div>
             </details>
@@ -399,13 +400,14 @@
         }
 
         const glyphWidth = width;
-        const inset = 20;
+        const inset = width;
         const lineWidth = 2;
 
-        const alignmentMarks = document.querySelector('input[name="alignmentMarks"]').checked;
         const orientation = document.querySelector('input[name="orientation"]:checked').value;
+        const alignmentMarks = document.querySelector('input[name="alignmentMarks"]').checked;
         const layout = document.querySelector('input[name="layout"]:checked').value;
         const scale = parseFloat(document.querySelector('input[name="scale"]').value) / 3;
+        const webLink = document.querySelector('input[name="webLink"]').checked;
 
         let [glyphsPerRow, glyphsPerCol] = layout === '2x6' ? [2, 6] : [3, 4];
         if (orientation === 'portrait') [glyphsPerRow, glyphsPerCol] = [glyphsPerCol, glyphsPerRow];
@@ -449,18 +451,25 @@
             }
         }
 
+        if (webLink) {
+            const textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            textElement.setAttribute("x", "50%");
+            textElement.setAttribute("y", 20);
+            textElement.setAttribute("text-anchor", "middle");
+            textElement.setAttribute("style", "font: bold 16px Arial;");
+            textElement.textContent = "https://bitcan.world";
+            template.appendChild(textElement);
+        }
 
         template.addEventListener('click', () => {
             const target = template.cloneNode(true)
-            const cssText = `
+            const styleElement = document.createElementNS("http://www.w3.org/2000/svg", "style");
+            styleElement.textContent = `
                 line.light {
                     stroke: darkgrey;
                     stroke-width: 1;
                 }
             `;
-
-            const styleElement = document.createElementNS("http://www.w3.org/2000/svg", "style");
-            styleElement.textContent = cssText;
             target.insertBefore(styleElement, target.firstChild);
 
             const serializer = new XMLSerializer();
@@ -474,7 +483,7 @@
         svgContainer.appendChild(template);
     }
 
-    document.querySelectorAll('input[name="alignmentMarks"], input[name="orientation"], input[name="layout"], input[name="scale"]')
+    document.querySelectorAll('input[name="orientation"], input[name="alignmentMarks"], input[name="layout"], input[name="scale"], input[name="webLink"]')
         .forEach(input => input.addEventListener('input', drawTemplateSVG));
 
     drawTemplateSVG();
