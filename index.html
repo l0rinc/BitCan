@@ -478,7 +478,7 @@
     }
 
     document.querySelectorAll('input[name="alignmentMarks"], input[name="orientation"], input[name="layout"], input[name="scale"]')
-        .forEach(input => input.addEventListener('change', drawTemplateSVG));
+        .forEach(input => input.addEventListener('input', drawTemplateSVG));
 
     drawTemplateSVG();
 </script>
