@@ -48,28 +48,9 @@
             border-radius: 0.5em;
         }
 
-        .word-box svg {
-            width: 100%;
-            height: 100%;
-        }
-
         .word-box.smaller {
-            height: 6em;
             float: left;
-            margin-right: 1em;
-        }
-
-        .word {
-            font-family: var(--font-family-monospace);
-            text-align: center;
-            font-size: 0.7em;
-        }
-
-        .binary-string {
-            font-family: var(--font-family-monospace);
-            color: black;
-            font-style: italic;
-            font-size: 0.5em;
+            margin-right: 0.5em;
         }
 
         .centered-images {
@@ -106,10 +87,6 @@
             margin-top: 1em;
             cursor: pointer;
             box-shadow: var(--box-shadow);
-        }
-
-        .right-margin {
-            margin-right: 1px;
         }
 
         line.light {
@@ -292,36 +269,61 @@
     }
 
     function renderWordAndGlyph(container, word, index) {
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        let svgHeight = height + 2 * lineInset + 10;
+        let y = 0;
+
         if (word.length) {
-            const wordElement = document.createElement('div');
-            wordElement.className = 'word';
-            wordElement.innerHTML = (
-                `<strong class="right-margin">${word.substring(0, 4)}</strong>` +
-                `${word.substring(4)}`
-            );
-            container.appendChild(wordElement);
+            y += 20;
+            svgHeight += 20;
+
+            const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            textElement.setAttribute("x", width / 2);
+            textElement.setAttribute("y", 10);
+            textElement.setAttribute("text-anchor", "middle");
+            textElement.setAttribute("style", "font: 0.8em 'Courier New', monospace;");
+
+            const boldTspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+            boldTspan.setAttribute("style", "font-weight: bold;");
+            boldTspan.textContent = word.substring(0, 4);
+            textElement.appendChild(boldTspan);
+
+            if (word.length > 4) {
+                const normalTspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                normalTspan.textContent = word.substring(4);
+                textElement.appendChild(normalTspan);
+            }
+
+            svg.appendChild(textElement);
         }
+        svg.setAttribute("viewBox", `${-lineInset} ${-lineInset} ${width + 2 * lineInset} ${svgHeight}`);
+
 
         const binaryString = asBinary(index);
 
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute("viewBox", `${-lineInset} ${-lineInset} ${width + 2 * lineInset} ${height + 2 * lineInset}`);
-        drawChar(svg, binaryString.split('').reverse().join(''));
+        drawChar(svg, binaryString.split('').reverse().join(''), true, 0, y);
+
+        const binaryTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        binaryTextElement.setAttribute("x", width / 2);
+        binaryTextElement.setAttribute("y", svgHeight - 10);
+        binaryTextElement.setAttribute("text-anchor", "middle");
+        binaryTextElement.setAttribute("style", "font: 0.55em 'Courier New', monospace;");
+
+        for (const char of binaryString) {
+            const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+            tspan.setAttribute("style", "font-style: italic;");
+            parseInt(char) && tspan.setAttribute("style", "font-style: italic; font-weight: bold;");
+            tspan.textContent = char;
+            binaryTextElement.appendChild(tspan);
+        }
+
+        svg.appendChild(binaryTextElement);
         container.appendChild(svg);
 
-        const binaryWord = document.createElement('div');
-        binaryWord.className = 'word';
-        binaryWord.innerHTML = (
-            `<span class="binary-string">` +
-            `<span class="right-margin">${binaryString.substring(0, 1)}</span>` +
-            `<span class="right-margin">${binaryString.substring(1, 6)}</span>` +
-            `${binaryString.substring(6)}` +
-            `</span>`
-        ).replaceAll('1', '<strong>1</strong>');
-        container.appendChild(binaryWord);
+        container.appendChild(svg);
     }
 
-    function drawChar(svg, binaryString, drawRect = true, x = 0, y = 0) {
+    function drawChar(svg, binaryString, drawRect, x, y) {
         if (drawRect) {
             const background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
             background.setAttribute('x', x);
