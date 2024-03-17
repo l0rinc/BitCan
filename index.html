@@ -267,19 +267,17 @@
         [lineInset, height, width - lineInset, height],
     ];
     const binaryLength = lines.length;
+    const animationCycle = binaryLength * 2;
 
     let currentIndex = 0;
-    let direction = 1;
 
     function drawCurrent(animationContainer) {
         animationContainer.innerHTML = '';
 
-        renderWordAndGlyph(animationContainer, "", 1 << currentIndex);
+        const index = (1 << (binaryLength - Math.abs((currentIndex % animationCycle) - binaryLength))) >> 1;
+        renderWordAndGlyph(animationContainer, "", index);
 
-        currentIndex += direction;
-        if (currentIndex % (binaryLength - 1) === 0) {
-            direction *= -1;
-        }
+        currentIndex = (currentIndex + 1) % animationCycle;
     }
 
     setInterval(() => drawCurrent(document.getElementById('animationContainer')), 500);
