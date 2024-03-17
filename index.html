@@ -31,6 +31,10 @@
             cursor: pointer;
         }
 
+        .clickable {
+            cursor: pointer;
+        }
+
         .word-box {
             width: 3em;
             padding: 0.3em;
@@ -224,7 +228,7 @@
                     <li>Etch each glyph carefully onto the metal, double-checking for precision and verifying the sequence by reviewing it in reverse.</li>
                     <li>Use a screwdriver for etching the glyphs into the metal.</li>
                     <li>To ensure security and privacy, store the etched metal in a location that is both secure and discreet.</li>
-                    <li>Print the table below into a PDF and back it up.</li>
+                    <li class="clickable" onclick="window.print()">Print the table below into a PDF and back it up.</li>
                 </ol>
             </details>
 
@@ -485,7 +489,8 @@
             const serializer = new XMLSerializer();
             const svgStr = serializer.serializeToString(target);
             const blob = new Blob([svgStr], {type: "image/svg+xml"});
-            window.open(URL.createObjectURL(blob), '_blank');
+            const win = window.open(URL.createObjectURL(blob), '_blank');
+            win.print();
         });
 
         const svgContainer = document.querySelector('.template-svg-container');
