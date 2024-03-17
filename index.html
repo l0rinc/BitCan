@@ -443,14 +443,15 @@
             }
         }
 
+        const halfGlyphWidth = glyphWidth / 2;
         if (alignmentMarks) {
             const [offsetX, offsetY] = [inset + glyphWidth * 1.5, inset + glyphWidth * 2.5];
             for (let row = 1; row < glyphsPerRow; row++) {
                 for (let col = 1; col < glyphsPerCol; col++) {
                     const x = offsetX + (col - 1) * glyphWidth * 2;
                     const y = offsetY + (row - 1) * glyphWidth * 3;
-                    createSVGLine(template, x, y - glyphWidth / 2 + lineWidth, x, y + glyphWidth / 2 - lineWidth, lineWidth);
-                    createSVGLine(template, x - glyphWidth / 2 + lineWidth, y, x + glyphWidth / 2 - lineWidth, y, lineWidth);
+                    createSVGLine(template, x, y - halfGlyphWidth + lineWidth, x, y + halfGlyphWidth - lineWidth, lineWidth);
+                    createSVGLine(template, x - halfGlyphWidth + lineWidth, y, x + halfGlyphWidth - lineWidth, y, lineWidth);
                 }
             }
         }
@@ -466,14 +467,15 @@
         }
 
         if (cornerMarks) {
-            createSVGLine(template, 0, 0, 0, glyphWidth / 2, lineWidth);
-            createSVGLine(template, 0, 0, glyphWidth / 2, 0, lineWidth);
+            const offset = lineWidth / 2;
+            createSVGLine(template, offset, offset, offset, halfGlyphWidth + offset, lineWidth);
+            createSVGLine(template, offset, offset, halfGlyphWidth + offset, offset, lineWidth);
 
-            createSVGLine(template, totalWidth, 0, totalWidth, glyphWidth / 2, lineWidth);
-            createSVGLine(template, totalWidth, 0, totalWidth - glyphWidth / 2, 0, lineWidth);
+            createSVGLine(template, totalWidth - offset, offset, totalWidth - offset, halfGlyphWidth + offset, lineWidth);
+            createSVGLine(template, totalWidth - offset, offset, totalWidth - halfGlyphWidth, offset, lineWidth);
 
-            createSVGLine(template, 0, totalHeight, 0, totalHeight - glyphWidth / 2, lineWidth);
-            createSVGLine(template, 0, totalHeight, glyphWidth / 2, totalHeight, lineWidth);
+            createSVGLine(template, offset, totalHeight - offset, offset, totalHeight - halfGlyphWidth - offset, lineWidth);
+            createSVGLine(template, offset, totalHeight - offset, halfGlyphWidth + offset, totalHeight - offset, lineWidth);
         }
 
         template.addEventListener('click', () => {
