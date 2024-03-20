@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <title>BitCan: DIY Bitcoin Seed Storage</title>
+    <style>
+        :root {
+            --background-gradient: radial-gradient(circle, white 0%, rgb(184, 183, 183) 100%);
+            --box-shadow: 0 0.3em 0.4em rgba(0, 0, 0, 0.1);
+            --light-grey-border: 0.1em solid #ccc;
+            --font-family-monospace: 'Courier New', monospace;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            padding: 0.2em;
+            background: var(--background-gradient);
+            max-width: 60em;
+            margin: 0.3em auto;
+        }
+
+        h1 {
+            margin: 1em 0;
+            font-size: 1.5em;
+            text-align: center;
+        }
+
+        summary {
+            cursor: pointer;
+        }
+
+        .clickable {
+            cursor: pointer;
+        }
+
+        .word-box {
+            width: 5em;
+            padding: 0.3em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            box-shadow: var(--box-shadow);
+            border: var(--light-grey-border);
+            border-radius: 0.5em;
+        }
+
+        .word-box.smaller {
+            float: left;
+            margin-right: 0.5em;
+        }
+
+        .centered-images {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1em;
+        }
+
+        .centered-images img {
+            max-width: 15em;
+            max-height: 15em;
+            width: auto;
+            height: auto;
+            box-shadow: var(--box-shadow);
+            cursor: pointer;
+        }
+
+        .section {
+            border: var(--light-grey-border);
+            padding: 1em;
+            margin-top: 1em;
+            border-radius: 0.5em;
+        }
+
+        .template-svg-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 1em;
+        }
+
+        .template-svg {
+            margin-top: 1em;
+            cursor: pointer;
+            box-shadow: var(--box-shadow);
+        }
+
+        line.light {
+            stroke: lightgrey;
+            stroke-width: 2;
+            stroke-dasharray: 3;
+        }
+
+        line.bold {
+            stroke: black;
+            stroke-width: 4;
+        }
+
+        .section-header {
+            width: 100%;
+            text-align: center;
+            font-family: var(--font-family-monospace);
+            font-size: 2em;
+            font-weight: bold;
+            border-bottom: var(--light-grey-border);
+            line-height: normal;
+            box-shadow: var(--box-shadow);
+        }
+
+        .section-header::after {
+            display: inline-block;
+            vertical-align: middle;
+            background: white;
+            position: relative;
+        }
+
+        #wordsContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5em;
+            justify-content: center;
+        }
+
+        @media print {
+            body {
+                background: none;
+            }
+
+            .word-box {
+                background: white;
+                box-shadow: none;
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+<div>
+    <article>
+        <h1>BitCan: DIY Bitcoin Seed Storage</h1>
+        <div class="article-animation-container">
+            <div class="word-box smaller" id="animationContainer"></div>
+        </div>
+        <p>32 bit storage - WIP</p>
+    </article>
+</div>
+<div class="section" id="wordsContainer"></div>
+
+<div class="section">
+    <div>
+        <label><input type="checkbox" id="withGap" checked>With gap</label>
+    </div>
+    <div>
+        <label>Test input: <input type="text" id="inputText" placeholder="Don't enter secrets here" size="100" maxlength="100"/></label>
+    </div>
+</div>
+
+<span id="glyphOutput"></span>
+
+<script>
+    const alphabet = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l'.toUpperCase();
+
+    const wordsContainer = document.getElementById('wordsContainer');
+    const width = 50;
+    const height = width;
+    const lineInset = 7;
+    const lines = [
+        [lineInset, 0, width - lineInset, 0],
+        [0, lineInset, 0, width - lineInset],
+        [lineInset, lineInset, width - lineInset, width - lineInset],
+        [width - lineInset, lineInset, lineInset, width - lineInset],
+        [lineInset, width, width - lineInset, width],
+    ];
+    const binaryLength = lines.length;
+    const animationCycle = binaryLength * 2;
+
+    let currentIndex = 0;
+
+    function drawCurrent(animationContainer) {
+        animationContainer.innerHTML = '';
+
+        const index = (1 << (binaryLength - Math.abs((currentIndex % animationCycle) - binaryLength))) >> 1;
+        renderWordAndGlyph(animationContainer, "", index);
+
+        currentIndex = (currentIndex + 1) % animationCycle;
+    }
+
+    setInterval(() => drawCurrent(document.getElementById('animationContainer')), 500);
+
+    function asBinary(num) {
+        return num.toString(2).padStart(binaryLength, '0');
+    }
+
+    function renderWordAndGlyph(container, word, index) {
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        let svgHeight = height + 2 * lineInset + 10;
+        let y = 0;
+
+        if (word.length) {
+            y += 20;
+            svgHeight += 20;
+
+            const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            textElement.setAttribute("x", width / 2);
+            textElement.setAttribute("y", 10);
+            textElement.setAttribute("text-anchor", "middle");
+            textElement.setAttribute("style", "font: 0.8em 'Courier New', monospace;");
+
+            const boldTspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+            boldTspan.setAttribute("style", "font-weight: bold;");
+            boldTspan.textContent = word;
+            textElement.appendChild(boldTspan);
+
+            svg.appendChild(textElement);
+        }
+        svg.setAttribute("viewBox", `${-lineInset} ${-lineInset} ${width + 2 * lineInset} ${svgHeight}`);
+
+        const binaryString = asBinary(index);
+
+        drawChar(svg, binaryString.split('').reverse().join(''), true, 0, y);
+
+        const binaryTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        binaryTextElement.setAttribute("x", width / 2);
+        binaryTextElement.setAttribute("y", svgHeight - 10);
+        binaryTextElement.setAttribute("text-anchor", "middle");
+        binaryTextElement.setAttribute("style", "font: 0.55em 'Courier New', monospace;");
+
+        for (const char of binaryString) {
+            const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+            tspan.setAttribute("style", "font-style: italic;");
+            parseInt(char) && tspan.setAttribute("style", "font-style: italic; font-weight: bold;");
+            tspan.textContent = char;
+            binaryTextElement.appendChild(tspan);
+        }
+
+        svg.appendChild(binaryTextElement);
+        container.appendChild(svg);
+
+        container.appendChild(svg);
+    }
+
+    function drawChar(svg, binaryString, drawRect, x, y) {
+        if (drawRect) {
+            const background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            background.setAttribute('x', x);
+            background.setAttribute('y', y);
+            background.setAttribute('width', width);
+            background.setAttribute('height', height);
+            background.setAttribute('fill', 'OldLace');
+            background.setAttribute('rx', 3);
+            svg.appendChild(background);
+        }
+
+        function drawLine(svg, x1, y1, x2, y2, isBold) {
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', x1);
+            line.setAttribute('y1', y1);
+            line.setAttribute('x2', x2);
+            line.setAttribute('y2', y2);
+            line.setAttribute('stroke-linecap', 'round');
+            line.classList.add(isBold ? 'bold' : 'light');
+            svg.appendChild(line);
+        }
+
+        "01".split('').forEach(char => {
+            lines.forEach((points, index) => {
+                if (binaryString[index] === char) {
+                    drawLine(svg, x + points[0], y + points[1], x + points[2], y + points[3], char === '1');
+                }
+            });
+        });
+    }
+
+    function displayLetters() {
+        alphabet.split('').forEach((word, index) => {
+            const wordBox = document.createElement('div');
+            wordBox.className = 'word-box';
+            renderWordAndGlyph(wordBox, word, asBinary(index));
+            wordsContainer.appendChild(wordBox);
+        });
+    }
+
+    displayLetters();
+
+    function convertTextToGlyphs() {
+        const inputText = document.getElementById('inputText').value.toUpperCase();
+        const withGap = document.getElementById('withGap').checked;
+
+        const outputContainer = document.getElementById('glyphOutput');
+        outputContainer.innerHTML = '';
+
+        const scale = 1.5;
+        let x = lineInset;
+        let y = lineInset;
+        const lineLength = 12;
+        const fullWidth = width + (withGap ? 2 : 1) * width * (lineLength - 1) + lineInset;
+        const fullHeight = height + 2 * (height * Math.ceil(inputText.length / lineLength - 1)) + 2 * lineInset;
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute("viewBox", `${-lineInset} ${-lineInset} ${fullWidth * scale} ${fullHeight * scale}`);
+
+        const background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        background.setAttribute('x', x - lineInset / 2);
+        background.setAttribute('y', y - lineInset / 2);
+        background.setAttribute('width', fullWidth - lineInset);
+        background.setAttribute('height', fullHeight - lineInset);
+        background.setAttribute('fill', 'OldLace');
+        background.setAttribute('rx', 3);
+        svg.appendChild(background);
+
+        inputText.split('').forEach((char, i) => {
+            const index = alphabet.indexOf(char);
+
+            const binaryString = asBinary(index);
+            drawChar(svg, binaryString.split('').reverse().join(''), false, x, y);
+
+            x += (width * (withGap ? 2 : 1));
+
+            if ((i + 1) % lineLength === 0) {
+                x = lineInset;
+                y += 2 * height;
+            }
+        });
+        outputContainer.appendChild(svg);
+    }
+
+    document.querySelectorAll('input[id="withGap"], input[id="inputText"]')
+        .forEach(input => input.addEventListener('input', convertTextToGlyphs));
+</script>
+</body>
+</html>
