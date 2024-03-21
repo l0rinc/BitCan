@@ -155,9 +155,13 @@
         <p>32 bit storage - WIP</p>
     </article>
 </div>
-<div class="section" id="wordsContainer"></div>
+<div class="section">
+    <label><input type="checkbox" id="alphabeticalToggle">Alphabetical</label>
+    <div id="wordsContainer"></div>
+</div>
 
 <div class="section">
+    <p>Test out different inputs here, but don't enter any valid secrets here!</p>
     <div>
         <label><input type="checkbox" id="withGap" checked>With gap</label>
     </div>
@@ -192,7 +196,7 @@
         animationContainer.innerHTML = '';
 
         const index = (1 << (binaryLength - Math.abs((currentIndex % animationCycle) - binaryLength))) >> 1;
-        renderWordAndGlyph(animationContainer, "", index);
+        renderLetterAndGlyph(animationContainer, "", index);
 
         currentIndex = (currentIndex + 1) % animationCycle;
     }
@@ -204,12 +208,12 @@
         return num.toString(2).padStart(binaryLength, '0');
     }
 
-    function renderWordAndGlyph(container, word, index) {
+    function renderLetterAndGlyph(container, letter, index) {
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         let svgHeight = height + 2 * lineInset + 10;
         let y = 0;
 
-        if (word.length) {
+        if (letter.length) {
             y += 20;
             svgHeight += 20;
 
@@ -221,7 +225,7 @@
 
             const boldTspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
             boldTspan.setAttribute("style", "font-weight: bold;");
-            boldTspan.textContent = word;
+            boldTspan.textContent = letter;
             textElement.appendChild(boldTspan);
 
             svg.appendChild(textElement);
@@ -285,12 +289,22 @@
     }
 
     function displayLetters() {
-        alphabet.split('').forEach((word, index) => {
+        const wordsContainer = document.getElementById('wordsContainer');
+        wordsContainer.innerHTML = ''; // Clear the container
+        let letterElements = [];
+        alphabet.split('').forEach((letter, index) => {
             const wordBox = document.createElement('div');
             wordBox.className = 'word-box';
-            renderWordAndGlyph(wordBox, word, asBinary(index));
-            wordsContainer.appendChild(wordBox);
+            renderLetterAndGlyph(wordBox, letter, asBinary(index));
+            letterElements.push({letter: letter, element: wordBox});
         });
+
+        const alphabetical = document.getElementById('alphabeticalToggle').checked;
+        if (alphabetical) {
+            letterElements.sort((a, b) => a.letter.localeCompare(b.letter));
+        }
+
+        letterElements.forEach(item => wordsContainer.appendChild(item.element));
     }
 
     displayLetters();
@@ -338,6 +352,8 @@
 
     document.querySelectorAll('input[id="withGap"], input[id="inputText"]')
         .forEach(input => input.addEventListener('input', convertTextToGlyphs));
+    document.querySelectorAll('input[id="alphabeticalToggle"]')
+        .forEach(input => input.addEventListener('input', displayLetters));
 </script>
 </body>
 </html>
