@@ -169,11 +169,12 @@
     const width = 50;
     const height = width;
     const lineInset = 7;
+    const midLineInset = 1.5 * lineInset;
     const lines = [
         [lineInset, 0, width - lineInset, 0],
         [0, lineInset, 0, width - lineInset],
-        [lineInset, lineInset, width - lineInset, width - lineInset],
-        [width - lineInset, lineInset, lineInset, width - lineInset],
+        [midLineInset, midLineInset, width - midLineInset, width - midLineInset],
+        [width - midLineInset, midLineInset, midLineInset, width - midLineInset],
         [lineInset, width, width - lineInset, width],
     ];
     const binaryLength = lines.length;
