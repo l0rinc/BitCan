@@ -298,7 +298,7 @@
         const scale = 1.5;
         let x = lineInset;
         let y = lineInset;
-        const lineLength = 12;
+        const lineLength = 8; // This way the first line is optional
         const fullWidth = width + (withGap ? 2 : 1) * width * (lineLength - 1) + lineInset;
         const fullHeight = height + 2 * (height * Math.ceil(inputText.length / lineLength - 1)) + 2 * lineInset;
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
