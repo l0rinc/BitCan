@@ -235,7 +235,6 @@
 </div>
 
 <script>
-    const wordsContainer = document.getElementById('wordsContainer');
     const tocContainer = document.getElementById('tocContainer');
     const width = 50;
     const height = 2 * width;
@@ -261,7 +260,8 @@
 
     let currentIndex = 0;
 
-    function drawCurrent(animationContainer) {
+    function drawCurrent() {
+        const animationContainer = document.getElementById('animationContainer')
         animationContainer.innerHTML = '';
 
         const index = (1 << (binaryLength - Math.abs((currentIndex % animationCycle) - binaryLength))) >> 1;
@@ -270,7 +270,8 @@
         currentIndex = (currentIndex + 1) % animationCycle;
     }
 
-    setInterval(() => drawCurrent(document.getElementById('animationContainer')), 500);
+    drawCurrent();
+    setInterval(() => drawCurrent(), 500);
 
     function asBinary(num) {
         return num.toString(2).padStart(binaryLength, '0');
@@ -364,6 +365,7 @@
     }
 
     function fetchAndDisplayWords() {
+        const wordsContainer = document.getElementById('wordsContainer');
         fetch('https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt')
             .then(response => response.text())
             .then(text => text.trim().split('\n'))

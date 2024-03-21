@@ -171,7 +171,6 @@
 <script>
     const alphabet = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l'.toUpperCase();
 
-    const wordsContainer = document.getElementById('wordsContainer');
     const width = 50;
     const height = width;
     const lineInset = 7;
@@ -188,7 +187,8 @@
 
     let currentIndex = 0;
 
-    function drawCurrent(animationContainer) {
+    function drawCurrent() {
+        const animationContainer = document.getElementById('animationContainer')
         animationContainer.innerHTML = '';
 
         const index = (1 << (binaryLength - Math.abs((currentIndex % animationCycle) - binaryLength))) >> 1;
@@ -197,7 +197,8 @@
         currentIndex = (currentIndex + 1) % animationCycle;
     }
 
-    setInterval(() => drawCurrent(document.getElementById('animationContainer')), 500);
+    drawCurrent();
+    setInterval(() => drawCurrent(), 500);
 
     function asBinary(num) {
         return num.toString(2).padStart(binaryLength, '0');
