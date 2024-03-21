@@ -316,7 +316,7 @@
         const outputContainer = document.getElementById('glyphOutput');
         outputContainer.innerHTML = '';
 
-        const scale = 1.5;
+        const scale = withGap ? 1.075 : 2;
         let x = lineInset;
         let y = lineInset;
         const lineLength = 8; // This way the first line is optional
@@ -340,7 +340,15 @@
             const binaryString = asBinary(index);
             drawChar(svg, binaryString.split('').reverse().join(''), false, x, y);
 
-            x += (width * (withGap ? 2 : 1));
+            const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            textElement.setAttribute("x", x);
+            textElement.setAttribute("y", y + 3);
+            textElement.setAttribute("text-anchor", "middle");
+            textElement.setAttribute("style", "font: 0.8em 'Courier New', monospace;");
+            textElement.textContent = char;
+            svg.appendChild(textElement);
+
+            x += width * (withGap ? 2 : 1);
 
             if ((i + 1) % lineLength === 0) {
                 x = lineInset;
