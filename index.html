@@ -140,14 +140,14 @@
             cursor: pointer;
         }
 
-        #wordsContainer {
+        #words_container {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5em;
             justify-content: center;
         }
 
-        #tocContainer {
+        #toc_container {
             text-align: center;
             margin-bottom: 1.2em;
         }
@@ -157,7 +157,7 @@
                 background: none;
             }
 
-            #tocContainer, .toc-item {
+            #toc_container, .toc-item {
                 display: none;
             }
 
@@ -182,7 +182,7 @@
         <p>Each binary-encoded glyph corresponds to a word from the seed list, allowing for discreet stamping onto common materials.</p>
         <p>The design ensures that the medium isn't easily deciphered by unintended observers, such as cleaning staff or intruders.</p>
         <details class="section" open>
-            <summary>Basic setup</summary>
+            <summary id="basic_setup">Basic setup</summary>
             <div class="centered-images">
                 <a href="img/img_1.jpg" target="_blank"><img src="img/img_1.jpg" alt="Seed storage preparation from a repurposed aluminium can."/></a>
                 <a href="img/img_2.jpg" target="_blank"><img src="img/img_2.jpg" alt="Encoding the existing seed phrase into glyphs using the provided chart."/></a>
@@ -193,7 +193,7 @@
             </div>
         </details>
         <details class="section" open>
-            <summary>Durable setup</summary>
+            <summary id="durable_setup">Durable setup</summary>
             <p>The average aluminium can may melt in direct fire. To enhance fire resistance, consider:</p>
             <ol>
                 <li>Placing it in a fireproof container filled with sand or salt, which theoretically could absorb some of the heat.<br/>Note: This method has not been empirically tested yet.<br/>
@@ -212,7 +212,7 @@
             </ol>
         </details>
         <details class="section">
-            <summary>Encoding Instructions</summary>
+            <summary id="encoding">Encoding Instructions</summary>
             <details class="section" open="open">
                 <summary>Sticker Template</summary>
                 <p>Print the template, stick it on az aluminium can, draw your seed phrase on the print, then stamp through the sticker with a screwdriver.</p>
@@ -231,7 +231,7 @@
                 <div class="template-svg-container"></div>
             </details>
             <details class="section">
-                <summary>Details</summary>
+                <summary id="encoding_details">Details</summary>
                 <ol>
                     <li>Securely generate your mnemonic seed phrase using a trusted, offline hardware wallet.</li>
                     <li>Flatten an aluminium can into a sheet and then attach the printed template to it - or draw it onto a piece of paper and affix it to the can.</li>
@@ -244,7 +244,7 @@
             </details>
         </details>
         <details class="section">
-            <summary>Decoding Instructions</summary>
+            <summary id="decoding">Decoding Instructions</summary>
             <ol>
                 <li>First, transcribe all glyphs carefully onto a sheet of paper. This will serve as a more reliable reference than working directly from the plate.</li>
                 <li>Identify the bottom square of each glyph first, as it provides a stable starting point for the decoding process.</li>
@@ -256,12 +256,11 @@
     </article>
 </div>
 <div class="section">
-    <div id="tocContainer"></div>
-    <div id="wordsContainer"></div>
+    <div id="toc_container"></div>
+    <div id="words_container"></div>
 </div>
 
 <script>
-    const tocContainer = document.getElementById('tocContainer');
     const width = 50;
     const height = 2 * width;
     const lineInset = 7;
@@ -390,7 +389,8 @@
     }
 
     function fetchAndDisplayWords() {
-        const wordsContainer = document.getElementById('wordsContainer');
+        const wordsContainer = document.getElementById('words_container');
+        const tocContainer = document.getElementById('toc_container');
         fetch('https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt')
             .then(response => response.text())
             .then(text => text.trim().split('\n'))
