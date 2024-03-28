@@ -199,8 +199,10 @@
                     <label><input type="radio" name="orientation" value="landscape" checked>Landscape</label>
                     <label><input type="checkbox" name="alignmentMarks" checked>Alignment Marks</label>
                     <label><input type="checkbox" name="cornerMarks" checked>Corner Marks</label>
-                    <label><input type="radio" name="layout" value="2x6" checked>2x6</label>
-                    <label><input type="radio" name="layout" value="3x4">3x4</label>
+                    <label><input type="radio" name="layout" value="[2,2]">2x2</label>
+                    <label><input type="radio" name="layout" value="[2,3]">2x3</label>
+                    <label><input type="radio" name="layout" value="[2,6]" checked>2x6</label>
+                    <label><input type="radio" name="layout" value="[3,4]">3x4</label>
                     <label><input type="range" name="scale" min="1" max="4" value="2">Scale</label>
                     <label><input type="checkbox" name="webLink" checked>Web Link</label>
                 </div>
@@ -323,7 +325,6 @@
         }
         svg.setAttribute("viewBox", `${-lineInset} ${-lineInset} ${width + 2 * lineInset} ${svgHeight}`);
 
-
         const binaryString = asBinary(index);
 
         drawChar(svg, binaryString.split('').reverse().join(''), true, 0, y);
@@ -438,7 +439,7 @@
         const webLink = document.querySelector('input[name="webLink"]').checked;
         const cornerMarks = document.querySelector('input[name="cornerMarks"]').checked;
 
-        let [glyphsPerRow, glyphsPerCol] = layout === '2x6' ? [2, 6] : [3, 4];
+        let [glyphsPerRow, glyphsPerCol] = JSON.parse(layout);
         if (orientation === 'portrait') [glyphsPerRow, glyphsPerCol] = [glyphsPerCol, glyphsPerRow];
 
         const totalWidth = inset * 2 + glyphWidth * (glyphsPerCol * 2 - 1);
