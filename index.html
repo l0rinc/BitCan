@@ -101,8 +101,7 @@
 
         line.light {
             stroke: lightgrey;
-            stroke-width: 2;
-            stroke-dasharray: 3;
+            stroke-width: 3;
         }
 
         line.bold {
@@ -216,18 +215,24 @@
             <details class="section" open="open">
                 <summary>Sticker Template</summary>
                 <p>Print the template, stick it on az aluminium can, draw your seed phrase on the print, then stamp through the sticker with a screwdriver.</p>
-                <div>
-                    <label><input type="radio" name="orientation" value="portrait">Portrait</label>
-                    <label><input type="radio" name="orientation" value="landscape" checked>Landscape</label>
-                    <label><input type="checkbox" name="alignmentMarks" checked>Alignment Marks</label>
-                    <label><input type="checkbox" name="cornerMarks" checked>Corner Marks</label>
-                    <label><input type="radio" name="layout" value="[2,2]">2x2</label>
-                    <label><input type="radio" name="layout" value="[2,3]">2x3</label>
-                    <label><input type="radio" name="layout" value="[2,6]" checked>2x6</label>
-                    <label><input type="radio" name="layout" value="[3,4]">3x4</label>
-                    <label><input type="range" name="scale" min="1" max="4" value="2">Scale</label>
-                    <label><input type="checkbox" name="webLink" checked>URL</label>
-                </div>
+                <center>
+                    <div>
+                        <label><input type="range" name="scale" min="1" max="4" value="2">Scale</label>
+                        <br/>
+                        <label><input type="radio" name="layout" value="[2,2]">2x2</label>
+                        <label><input type="radio" name="layout" value="[2,3]">2x3</label>
+                        <label><input type="radio" name="layout" value="[2,6]" checked>2x6</label>
+                        <label><input type="radio" name="layout" value="[3,4]">3x4</label>
+                        <br/>
+                        <label><input type="radio" name="orientation" value="portrait">Portrait</label>
+                        <label><input type="radio" name="orientation" value="landscape" checked>Landscape</label>
+                        <br/>
+                        <label><input type="checkbox" name="alignmentMarks" checked>Alignment Marks</label>
+                        <label><input type="checkbox" name="cornerMarks" checked>Corner Marks</label>
+                        <label><input type="checkbox" name="webLink" checked>URL</label>
+                        <label><input type="checkbox" name="dotted" checked>Dotted</label>
+                    </div>
+                </center>
                 <div class="template-svg-container"></div>
             </details>
             <details class="section">
@@ -334,7 +339,7 @@
 
         const binaryString = asBinary(index);
 
-        drawChar(svg, binaryString.split('').reverse().join(''), true, 0, y);
+        drawChar(svg, binaryString.split('').reverse().join(''), true, 0, y, false);
 
         const binaryTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         binaryTextElement.setAttribute("x", width / 2);
@@ -356,7 +361,7 @@
         container.appendChild(svg);
     }
 
-    function drawChar(svg, binaryString, drawRect, x, y) {
+    function drawChar(svg, binaryString, drawRect, x, y, dotted) {
         if (drawRect) {
             const background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
             background.setAttribute('x', x);
@@ -368,7 +373,7 @@
             svg.appendChild(background);
         }
 
-        function drawLine(svg, x1, y1, x2, y2, isBold) {
+        function drawLine(svg, x1, y1, x2, y2, isBold, dotted) {
             const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
             line.setAttribute('x1', x1);
             line.setAttribute('y1', y1);
@@ -376,13 +381,14 @@
             line.setAttribute('y2', y2);
             line.setAttribute('stroke-linecap', 'round');
             line.classList.add(isBold ? 'bold' : 'light');
+            line.setAttribute('stroke-dasharray', dotted ? 4 : 0);
             svg.appendChild(line);
         }
 
         "01".split('').forEach(char => {
             lines.forEach((points, index) => {
                 if (binaryString[index] === char) {
-                    drawLine(svg, x + points[0], y + points[1], x + points[2], y + points[3], char === '1');
+                    drawLine(svg, x + points[0], y + points[1], x + points[2], y + points[3], char === '1', dotted);
                 }
             });
         });
@@ -438,7 +444,7 @@
 
         const glyphWidth = width;
         const inset = width;
-        const lineWidth = 2;
+        const lineWidth = 3;
 
         const orientation = document.querySelector('input[name="orientation"]:checked').value;
         const alignmentMarks = document.querySelector('input[name="alignmentMarks"]').checked;
@@ -446,6 +452,7 @@
         const scale = parseFloat(document.querySelector('input[name="scale"]').value) / 3;
         const webLink = document.querySelector('input[name="webLink"]').checked;
         const cornerMarks = document.querySelector('input[name="cornerMarks"]').checked;
+        const dotted = document.querySelector('input[name="dotted"]').checked;
 
         let [glyphsPerRow, glyphsPerCol] = JSON.parse(layout);
         if (orientation === 'portrait') [glyphsPerRow, glyphsPerCol] = [glyphsPerCol, glyphsPerRow];
@@ -474,7 +481,7 @@
             for (let col = 0; col < glyphsPerCol; col++) {
                 const x = inset + col * 2 * glyphWidth;
                 const y = inset + row * 3 * glyphWidth;
-                drawChar(template, '00000000000', false, x, y);
+                drawChar(template, '00000000000', false, x, y, dotted);
             }
         }
 
@@ -520,7 +527,7 @@
                 line.light {
                     stroke: lightgrey;
                     stroke-width: ${lineWidth};
-                    stroke-dasharray: 3;
+                    stroke-dasharray: ${dotted ? 4 : 0};
                 }
             `;
             target.insertBefore(styleElement, target.firstChild);
@@ -537,7 +544,7 @@
         svgContainer.appendChild(template);
     }
 
-    document.querySelectorAll('input[name="orientation"], input[name="alignmentMarks"], input[name="layout"], input[name="scale"], input[name="webLink"], input[name="cornerMarks"]')
+    document.querySelectorAll('input[name="orientation"], input[name="alignmentMarks"], input[name="layout"], input[name="scale"], input[name="webLink"], input[name="cornerMarks"], input[name="dotted"]')
         .forEach(input => input.addEventListener('input', drawTemplateSVG));
 
     drawTemplateSVG();
