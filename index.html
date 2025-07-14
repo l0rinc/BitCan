@@ -100,13 +100,13 @@
         }
 
         line.light {
-            stroke: lightgrey;
-            stroke-width: 3;
+            stroke: #E3E3E3;
+            stroke-width: 4;
         }
 
         line.bold {
             stroke: black;
-            stroke-width: 4;
+            stroke-width: 5;
         }
 
         .section-header {
@@ -176,46 +176,34 @@
         <div class="article-animation-container">
             <div class="word-box smaller" id="animationContainer"></div>
         </div>
-        <p><a href="https://github.com/l0rinc/BitCan">BitCan</a> provides a cost-effective, DIY solution for securing <a href="https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki" target="_blank">Bitcoin mnemonic seed phrases</a> — striking a balance between fragile paper wallets and <a href="https://jlopp.github.io/metal-bitcoin-storage-reviews" target="_blank">heavy-duty metal
+        <p><a href="https://github.com/l0rinc/BitCan">BitCan</a> provides a cost-effective, DIY solution for securing Bitcoin mnemonic seed phrases - striking a balance between fragile paper wallets and <a href="https://jlopp.github.io/metal-bitcoin-storage-reviews" target="_blank">heavy-duty metal
             plates</a>.</p>
-        <p>Each binary-encoded glyph corresponds to a word from the seed list, allowing for discreet stamping onto common materials.</p>
+        <p>Each binary-encoded glyph corresponds to a word from the <a href="https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki" target="_blank">BIP39 word list</a>, allowing for discreet stamping onto common materials.</p>
         <p>The design ensures that the medium isn't easily deciphered by unintended observers, such as cleaning staff or intruders.</p>
         <details class="section" open>
             <summary id="basic_setup">Basic setup</summary>
             <div class="centered-images">
-                <a href="img/img_1.jpg" target="_blank"><img src="img/img_1.jpg" alt="Seed storage preparation from a repurposed aluminium can."/></a>
+                <a href="img/img_1.jpg" target="_blank"><img src="img/img_1.jpg" alt="Seed storage preparation from a repurposed aluminum can."/></a>
                 <a href="img/img_2.jpg" target="_blank"><img src="img/img_2.jpg" alt="Encoding the existing seed phrase into glyphs using the provided chart."/></a>
-                <a href="img/img_3.jpg" target="_blank"><img src="img/img_3.jpg" alt="Tracing glyphs using a screwdriver."/></a>
-                <a href="img/img_4.jpg" target="_blank"><img src="img/img_4.jpg" alt="Removing the sticker from the can."/></a>
-                <a href="img/img_5.jpg" target="_blank"><img src="img/img_5.jpg" alt="The completed seed plate with engraved glyphs."/></a>
-                <a href="img/img_6.jpg" target="_blank"><img src="img/img_6.jpg" alt="Final storage, plate rolled up."/></a>
+                <a href="img/img_3.jpg" target="_blank"><img src="img/img_3.jpg" alt="Removing the sticker from the can."/></a>
+                <a href="img/img_4.jpg" target="_blank"><img src="img/img_4.jpg" alt="The completed seed plate with engraved glyphs."/></a>
             </div>
         </details>
         <details class="section" open>
             <summary id="durable_setup">Durable setup</summary>
-            <p>The average aluminium can may melt in direct fire. To enhance fire resistance, consider:</p>
-            <ol>
-                <li>Placing it in a fireproof container filled with sand or salt, which theoretically could absorb some of the heat.<br/>
-                    <div class="centered-images">
-                        <a href="img/img_7.jpg" target="_blank"><img src="img/img_7.jpg" alt="Alternative, heat resistant storage, plate rolled up"/></a>
-                    </div>
-                </li>
-                <li>Stamping the symbols onto stainless steel dog tags that are chained together.<br/>Note: stainless steel is more challenging to stamp.<br/>
-                    <div class="centered-images">
-                        <a href="img/img_8.jpg" target="_blank"><img src="img/img_8.jpg" alt="Stamping on a stainless-steep dog-tag."/></a>
-                        <a href="img/img_9.jpg" target="_blank"><img src="img/img_9.jpg" alt="Dog tags on a chain, in order."/></a>
-                        <a href="img/img_10.jpg" target="_blank"><img src="img/img_10.jpg" alt="Heat resistance."/></a>
-                    </div>
-                    <p>As an added bonus, dog tags resemble a personal keepsake, which may deter accidental disposal while reducing the likelihood of deliberate theft.</p>
-                </li>
-            </ol>
+            <p>To enhance fire resistance, you can also engrave the symbols onto stainless steel dog tags:</p>
+            <div class="centered-images">
+                <a href="img/img_5.jpg" target="_blank"><img src="img/img_5.jpg" alt="Engraving 12/24 symbols on a small dog tag."/></a>
+                <a href="img/img_6.jpg" target="_blank"><img src="img/img_6.jpg" alt="Heat resistance."/></a>
+            </div>
+            <p>As a bonus, dog tags resemble a personal keepsake, which may deter accidental disposal while reducing the likelihood of deliberate theft.</p>
         </details>
         <details class="section">
             <summary id="encoding">Encoding Instructions</summary>
             <details class="section" open="open">
                 <summary>Sticker Template</summary>
-                <p>Print the template, stick it on az aluminium can, draw your seed phrase on the print, then stamp through the sticker with a screwdriver.</p>
-                <center>
+                <p>Print the template, stick it on an aluminum can, draw the glyphs for your seed phrase on the template, then stamp through the sticker with a screwdriver.</p>
+                <div style="text-align: center;">
                     <div>
                         <label><input type="range" name="scale" min="1" max="4" value="2">Scale</label>
                         <br/>
@@ -232,14 +220,14 @@
                         <label><input type="checkbox" name="webLink" checked>URL</label>
                         <label><input type="checkbox" name="dotted" checked>Dotted</label>
                     </div>
-                </center>
+                </div>
                 <div class="template-svg-container"></div>
             </details>
             <details class="section">
                 <summary id="encoding_details">Details</summary>
                 <ol>
                     <li>Securely generate your mnemonic seed phrase using a trusted, offline hardware wallet in a private location.</li>
-                    <li>Flatten an aluminium can into a sheet (or use a thin stainless steel dog tag) and then attach the printed template to it - or draw it onto a piece of paper and affix it to the sheet.</li>
+                    <li>Flatten an aluminum can into a sheet (or use a thin stainless steel dog tag), then attach the printed template to the metal surface.</li>
                     <li>Translate the words into glyphs, ensuring each corresponds accurately to the provided list.</li>
                     <li>Stamp each glyph carefully onto the metal, double-checking for precision and verifying the sequence by reviewing it in reverse.</li>
                     <li>Use a screwdriver for stamping the glyphs into the metal.</li>
@@ -356,8 +344,6 @@
         }
 
         svg.appendChild(binaryTextElement);
-        container.appendChild(svg);
-
         container.appendChild(svg);
     }
 
@@ -525,7 +511,7 @@
             const styleElement = document.createElementNS("http://www.w3.org/2000/svg", "style");
             styleElement.textContent = `
                 line.light {
-                    stroke: lightgrey;
+                    stroke: #E3E3E3;
                     stroke-width: ${lineWidth};
                     stroke-dasharray: ${dotted ? 4 : 0};
                 }
