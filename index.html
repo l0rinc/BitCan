@@ -87,6 +87,19 @@
             border-radius: 0.5em;
         }
 
+        .command-block {
+            margin: 1em 0 0;
+            padding: 0.9em;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            border: var(--light-grey-border);
+            border-radius: 0.5em;
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: var(--box-shadow);
+            font: 0.9em var(--font-family-monospace);
+        }
+
         .template-svg-container {
             display: flex;
             justify-content: center;
@@ -245,6 +258,12 @@
                 <li>Alternatively, you can use binary search to navigate through the word list, since each line in the glyph halves the search area.</li>
                 <li>Verify the transcribed seed phrase with your wallet to ensure its accuracy and integrity.</li>
             </ol>
+        </details>
+        <details class="section">
+            <summary id="on_chain_reproducer">On-chain Glyph Reproducer</summary>
+            <p>The glyph reference table is also archived <a href="https://mempool.space/tx/2a5525e24ac3beb36c736aa8de173e3f326d50d128ac7fa0147ea83cef30c133" target="_blank">in block #940984</a>.</p>
+            <p>Run the following script in your terminal to extract the embedded Python snippet and print the reference table:</p>
+            <pre class="command-block">curl -s https://mempool.space/api/tx/2a5525e24ac3beb36c736aa8de173e3f326d50d128ac7fa0147ea83cef30c133/hex | xxd -r -p | strings | grep bitcan | python</pre>
         </details>
     </article>
 </div>
