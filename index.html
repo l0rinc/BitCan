@@ -254,6 +254,8 @@
 </div>
 
 <script>
+    const BIP39_WORDLIST_URL = 'https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt';
+    const BIP39_WORDLIST_CRC32 = 0xc1dbd296;
     const width = 50;
     const height = 2 * width;
     const lineInset = 8;
@@ -380,13 +382,42 @@
         });
     }
 
+    const crcTable = Array.from({length: 256}, (_, index) => {
+        let crc = index;
+        for (let bit = 0; bit < 8; bit++) {
+            crc = crc & 1 ? (crc >>> 1) ^ 0xEDB88320 : crc >>> 1;
+        }
+        return crc >>> 0;
+    });
+
+    function crc32(text) {
+        const bytes = new TextEncoder().encode(text);
+        let crc = 0xFFFFFFFF;
+        for (const byte of bytes) {
+            crc = (crc >>> 8) ^ crcTable[(crc ^ byte) & 0xFF];
+        }
+        return (crc ^ 0xFFFFFFFF) >>> 0;
+    }
+
     function fetchAndDisplayWords() {
         const wordsContainer = document.getElementById('words_container');
         const tocContainer = document.getElementById('toc_container');
-        fetch('https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt')
-            .then(response => response.text())
-            .then(text => text.trim().split('\n'))
+        fetch(BIP39_WORDLIST_URL)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch word list: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(text => {
+                if (crc32(text) !== BIP39_WORDLIST_CRC32) {
+                    throw new Error('BIP39 English word list CRC32 mismatch');
+                }
+                return text.trim().split('\n');
+            })
             .then(words => {
+                wordsContainer.innerHTML = '';
+                tocContainer.innerHTML = '';
                 let lastLetter = '';
                 words.forEach((word, index) => {
                     word = word.toUpperCase();
@@ -410,6 +441,11 @@
                     renderWordAndGlyph(wordBox, word, asBinary(index));
                     wordsContainer.appendChild(wordBox);
                 });
+            })
+            .catch(error => {
+                console.error(error);
+                tocContainer.innerHTML = '';
+                wordsContainer.textContent = 'Failed to verify the BIP39 English word list.';
             });
     }
 
