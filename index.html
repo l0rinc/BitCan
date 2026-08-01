@@ -130,6 +130,12 @@
             gap: 1em;
         }
 
+        .centered-images a {
+            position: relative;
+            display: block;
+            line-height: 0;
+        }
+
         .centered-images img {
             max-width: 15em;
             max-height: 15em;
@@ -137,6 +143,41 @@
             height: auto;
             box-shadow: var(--box-shadow);
             cursor: pointer;
+        }
+
+        .format-overlay {
+            position: absolute;
+            top: 0.5em;
+            right: 0.5em;
+            display: flex;
+            align-items: center;
+            gap: 0.3em;
+            padding: 0.3em 0.45em;
+            border-radius: 0.3em;
+            color: white;
+            background: rgba(0, 0, 0, 0.82);
+            box-shadow: var(--box-shadow);
+            font-size: 0.75em;
+            font-weight: bold;
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        .format-overlay[hidden] {
+            display: none;
+        }
+
+        .format-overlay .format-glyph {
+            width: 0.8em;
+            height: 1.6em;
+        }
+
+        .format-overlay line.light {
+            stroke: #666;
+        }
+
+        .format-overlay line.bold {
+            stroke: white;
         }
 
         .section {
@@ -266,18 +307,18 @@
         <details class="section" open>
             <summary id="basic_setup">Basic Setup</summary>
             <div class="centered-images">
-                <a href="img/pic_1.jpg" target="_blank"><img src="img/pic_1.jpg" alt="Seed storage preparation from a repurposed aluminum can."/></a>
-                <a href="img/pic_2.jpg" target="_blank"><img src="img/pic_2.jpg" alt="Encoding the existing seed phrase into glyphs using the provided chart."/></a>
-                <a href="img/pic_3.jpg" target="_blank"><img src="img/pic_3.jpg" alt="Removing the sticker from the can."/></a>
-                <a href="img/pic_4.jpg" target="_blank"><img src="img/pic_4.jpg" alt="The completed seed plate with engraved glyphs."/></a>
+                <a href="img/pic_1.jpg" target="_blank" data-glyph-format="stack"><img src="img/pic_1.jpg" alt="Seed storage preparation from a repurposed aluminum can."/></a>
+                <a href="img/pic_2.jpg" target="_blank" data-glyph-format="stack"><img src="img/pic_2.jpg" alt="Encoding the existing seed phrase into glyphs using the provided chart."/></a>
+                <a href="img/pic_3.jpg" target="_blank" data-glyph-format="stack"><img src="img/pic_3.jpg" alt="Removing the sticker from the can."/></a>
+                <a href="img/pic_4.jpg" target="_blank" data-glyph-format="stack"><img src="img/pic_4.jpg" alt="The completed seed plate with engraved glyphs."/></a>
             </div>
         </details>
         <details class="section" open>
             <summary id="durable_setup">Durable Setup</summary>
             <p>To enhance fire resistance, you can also engrave the symbols onto stainless steel dog tags:</p>
             <div class="centered-images">
-                <a href="img/pic_5.jpg" target="_blank"><img src="img/pic_5.jpg" alt="Engraving 12/24 symbols on a small dog tag."/></a>
-                <a href="img/pic_6.jpg" target="_blank"><img src="img/pic_6.jpg" alt="The finished setup."/></a>
+                <a href="img/pic_5.jpg" target="_blank" data-glyph-format="stack"><img src="img/pic_5.jpg" alt="Engraving 12/24 symbols on a small dog tag."/></a>
+                <a href="img/pic_6.jpg" target="_blank" data-glyph-format="stack"><img src="img/pic_6.jpg" alt="The finished setup."/></a>
             </div>
             <p>As a bonus, dog tags resemble personal keepsakes, which may deter accidental disposal while reducing the likelihood of deliberate theft.</p>
         </details>
@@ -489,10 +530,30 @@
         }
     }
 
+    document.querySelectorAll('.centered-images a[data-glyph-format]').forEach(link => {
+        const format = link.dataset.glyphFormat;
+        const overlay = document.createElement('span');
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        overlay.className = 'format-overlay';
+        overlay.hidden = true;
+        svg.classList.add('format-glyph');
+        svg.dataset.format = format;
+        svg.setAttribute('viewBox', '-8 -8 66 116');
+        svg.setAttribute('aria-hidden', 'true');
+        overlay.append(svg, format[0].toUpperCase() + format.slice(1));
+        link.appendChild(overlay);
+    });
+
     const formatGlyph = asBinary((1 << 2) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 8)).split('').reverse().join('');
     document.querySelectorAll('.format-glyph').forEach(svg => {
         drawChar(svg, formatGlyph, false, 0, 0, false, glyphFormats[svg.dataset.format]);
     });
+
+    function updateFormatOverlays(activeFormat) {
+        document.querySelectorAll('.centered-images a[data-glyph-format]').forEach(link => {
+            link.querySelector('.format-overlay').hidden = link.dataset.glyphFormat === activeFormat;
+        });
+    }
 
     const crcTable = Array.from({length: 256}, (_, index) => {
         let crc = index;
@@ -692,8 +753,10 @@
             drawCurrent();
             redrawWords();
             drawTemplateSVG();
+            updateFormatOverlays(activeFormat);
         }));
 
+    updateFormatOverlays('stack');
     drawTemplateSVG();
 </script>
 </body>
