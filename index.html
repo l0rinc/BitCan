@@ -392,13 +392,13 @@
             svg.appendChild(line);
         }
 
-        "01".split('').forEach(char => {
-            lines.forEach((points, index) => {
+        for (const char of '01') {
+            lines.forEach(([x1, y1, x2, y2], index) => {
                 if (binaryString[index] === char) {
-                    drawLine(svg, x + points[0], y + points[1], x + points[2], y + points[3], char === '1', dotted);
+                    drawLine(svg, x + x1, y + y1, x + x2, y + y2, char === '1', dotted);
                 }
             });
-        });
+        }
     }
 
     const crcTable = Array.from({length: 256}, (_, index) => {
