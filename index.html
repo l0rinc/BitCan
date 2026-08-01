@@ -45,6 +45,65 @@
             cursor: pointer;
         }
 
+        .format-switcher {
+            position: fixed;
+            right: 1em;
+            bottom: 1em;
+            z-index: 10;
+            display: flex;
+            gap: 0.2em;
+            margin: 0;
+            padding: 0.25em;
+            border: var(--light-grey-border);
+            border-radius: 0.5em;
+            background: white;
+            box-shadow: var(--box-shadow);
+        }
+
+        .format-switcher legend,
+        .format-switcher input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+        }
+
+        .format-option {
+            display: flex;
+            align-items: center;
+            gap: 0.4em;
+            padding: 0.45em 0.65em;
+            border-radius: 0.3em;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .format-glyph {
+            width: 1em;
+            height: 2em;
+            flex: none;
+        }
+
+        .format-switcher input:checked + .format-option {
+            color: white;
+            background: #222;
+        }
+
+        .format-switcher input:checked + .format-option line.light {
+            stroke: #666;
+        }
+
+        .format-switcher input:checked + .format-option line.bold {
+            stroke: white;
+        }
+
+        .format-switcher input:focus-visible + .format-option {
+            outline: 2px solid #E0653B;
+            outline-offset: 1px;
+        }
+
         .word-box {
             width: 3em;
             padding: 0.3em;
@@ -71,6 +130,12 @@
             gap: 1em;
         }
 
+        .centered-images a {
+            position: relative;
+            display: block;
+            line-height: 0;
+        }
+
         .centered-images img {
             max-width: 15em;
             max-height: 15em;
@@ -78,6 +143,41 @@
             height: auto;
             box-shadow: var(--box-shadow);
             cursor: pointer;
+        }
+
+        .format-overlay {
+            position: absolute;
+            top: 0.5em;
+            right: 0.5em;
+            display: flex;
+            align-items: center;
+            gap: 0.3em;
+            padding: 0.3em 0.45em;
+            border-radius: 0.3em;
+            color: white;
+            background: rgba(0, 0, 0, 0.82);
+            box-shadow: var(--box-shadow);
+            font-size: 0.75em;
+            font-weight: bold;
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        .format-overlay[hidden] {
+            display: none;
+        }
+
+        .format-overlay .format-glyph {
+            width: 0.8em;
+            height: 1.6em;
+        }
+
+        .format-overlay line.light {
+            stroke: #666;
+        }
+
+        .format-overlay line.bold {
+            stroke: white;
         }
 
         .section {
@@ -169,7 +269,7 @@
                 background: none;
             }
 
-            #toc_container, .toc-item {
+            #toc_container, .toc-item, .format-switcher {
                 display: none;
             }
 
@@ -183,39 +283,50 @@
     </style>
 </head>
 <body>
+<fieldset class="format-switcher">
+    <legend>Glyph format</legend>
+    <label>
+        <input type="radio" name="glyphFormat" value="stack" checked>
+        <span class="format-option"><svg class="format-glyph" data-format="stack" viewBox="-8 -8 66 116" aria-hidden="true"></svg>Stack</span>
+    </label>
+    <label>
+        <input type="radio" name="glyphFormat" value="fold">
+        <span class="format-option"><svg class="format-glyph" data-format="fold" viewBox="-8 -8 66 116" aria-hidden="true"></svg>Fold</span>
+    </label>
+</fieldset>
 <div>
     <article>
         <h1><a href="https://app.suno.ai/song/ba7932e8-4158-44a6-8ee1-2e09f210f178" target="_blank"><img src="Logo.svg" alt="" class="logo"></a> DIY Bitcoin Seed Storage</h1>
         <div class="article-animation-container">
             <div class="word-box smaller" id="animationContainer"></div>
         </div>
-        <p><a href="https://github.com/l0rinc/BitCan">BitCan</a> provides a cost-effective, DIY solution for securing Bitcoin mnemonic seed phrases - striking a balance between fragile paper wallets and <a href="https://jlopp.github.io/metal-bitcoin-storage-reviews" target="_blank">heavy-duty metal
+        <p><a href="https://github.com/l0rinc/BitCan">BitCan</a> provides a cost-effective DIY solution for securing Bitcoin mnemonic seed phrases, striking a balance between fragile paper wallets and <a href="https://jlopp.github.io/metal-bitcoin-storage-reviews" target="_blank">heavy-duty metal
             plates</a>.</p>
-        <p>Each binary-encoded glyph corresponds to a word from the <a href="https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki" target="_blank">BIP39 word list</a>, allowing for discreet stamping onto common materials.</p>
-        <p>The design ensures that the medium isn't easily deciphered by unintended observers, such as cleaning staff or intruders.</p>
+        <p>Each binary-encoded glyph corresponds to a word from the <a href="https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki" target="_blank">BIP39 word list</a>, so seed words can be stamped discreetly onto common materials.</p>
+        <p>The design helps keep the medium from being easily deciphered by unintended observers, such as cleaning staff or intruders.</p>
         <details class="section" open>
-            <summary id="basic_setup">Basic setup</summary>
+            <summary id="basic_setup">Basic Setup</summary>
             <div class="centered-images">
-                <a href="img/pic_1.jpg" target="_blank"><img src="img/pic_1.jpg" alt="Seed storage preparation from a repurposed aluminum can."/></a>
-                <a href="img/pic_2.jpg" target="_blank"><img src="img/pic_2.jpg" alt="Encoding the existing seed phrase into glyphs using the provided chart."/></a>
-                <a href="img/pic_3.jpg" target="_blank"><img src="img/pic_3.jpg" alt="Removing the sticker from the can."/></a>
-                <a href="img/pic_4.jpg" target="_blank"><img src="img/pic_4.jpg" alt="The completed seed plate with engraved glyphs."/></a>
+                <a href="img/pic_1.jpg" target="_blank" data-glyph-format="stack"><img src="img/pic_1.jpg" alt="Seed storage preparation from a repurposed aluminum can."/></a>
+                <a href="img/pic_2.jpg" target="_blank" data-glyph-format="stack"><img src="img/pic_2.jpg" alt="Encoding the existing seed phrase into glyphs using the provided chart."/></a>
+                <a href="img/pic_3.jpg" target="_blank" data-glyph-format="stack"><img src="img/pic_3.jpg" alt="Removing the sticker from the can."/></a>
+                <a href="img/pic_4.jpg" target="_blank" data-glyph-format="stack"><img src="img/pic_4.jpg" alt="The completed seed plate with engraved glyphs."/></a>
             </div>
         </details>
         <details class="section" open>
-            <summary id="durable_setup">Durable setup</summary>
+            <summary id="durable_setup">Durable Setup</summary>
             <p>To enhance fire resistance, you can also engrave the symbols onto stainless steel dog tags:</p>
             <div class="centered-images">
-                <a href="img/pic_5.jpg" target="_blank"><img src="img/pic_5.jpg" alt="Engraving 12/24 symbols on a small dog tag."/></a>
-                <a href="img/pic_6.jpg" target="_blank"><img src="img/pic_6.jpg" alt="The finished setup."/></a>
+                <a href="img/pic_5.jpg" target="_blank" data-glyph-format="stack"><img src="img/pic_5.jpg" alt="Engraving 12/24 symbols on a small dog tag."/></a>
+                <a href="img/pic_6.jpg" target="_blank" data-glyph-format="stack"><img src="img/pic_6.jpg" alt="The finished setup."/></a>
             </div>
-            <p>As a bonus, dog tags resemble a personal keepsake, which may deter accidental disposal while reducing the likelihood of deliberate theft.</p>
+            <p>As a bonus, dog tags resemble personal keepsakes, which may deter accidental disposal while reducing the likelihood of deliberate theft.</p>
         </details>
         <details class="section">
             <summary id="encoding">Encoding Instructions</summary>
             <details class="section" open="open">
                 <summary>Sticker Template</summary>
-                <p>Print the template, stick it on an aluminum can, draw the glyphs for your seed phrase on the template, then stamp through the sticker with a screwdriver.</p>
+                <p>Print the template, attach it to an aluminum can, draw the glyphs for your seed phrase, then stamp through the sticker with a screwdriver.</p>
                 <div style="text-align: center;">
                     <div>
                         <label><input type="range" name="scale" min="1" max="4" value="2">Scale</label>
@@ -239,29 +350,30 @@
             <details class="section">
                 <summary id="encoding_details">Details</summary>
                 <ol>
-                    <li>Securely generate your mnemonic seed phrase using a trusted, offline hardware wallet in a private location.</li>
+                    <li>Generate your mnemonic seed phrase securely using a trusted, offline hardware wallet in a private location.</li>
                     <li>Flatten an aluminum can into a sheet (or use a thin stainless steel dog tag), then attach the printed template to the metal surface.</li>
                     <li>Translate the words into glyphs, ensuring each corresponds accurately to the provided list.</li>
-                    <li>Stamp each glyph carefully onto the metal, double-checking for precision and verifying the sequence by reviewing it in reverse.</li>
-                    <li>Use a screwdriver for stamping the glyphs into the metal.</li>
-                    <li>To ensure security and privacy, store the stamped metal in a location that is both secure and discreet.</li>
-                    <li class="clickable" onclick="window.print()">Print the table below into a PDF and back it up.</li>
+                    <li>Stamp each glyph carefully onto the metal, double-checking for precision and verifying the sequence by reading it in reverse order.</li>
+                    <li>Use a screwdriver to stamp the glyphs into the metal.</li>
+                    <li>Store the stamped metal in a secure, discreet location.</li>
+                    <li class="clickable" onclick="window.print()">Print the table below to a PDF and back it up.</li>
                 </ol>
             </details>
         </details>
         <details class="section">
             <summary id="decoding">Decoding Instructions</summary>
             <ol>
-                <li>First, transcribe all glyphs carefully onto a sheet of paper. This will serve as a more reliable reference than working directly from the plate.</li>
-                <li>Identify the bottom square of each glyph first, as it provides a stable starting point for the decoding process.</li>
-                <li>Then, identify the top square of the glyph to refine your search within the identified section of the word list.</li>
-                <li>Alternatively, you can use binary search to navigate through the word list, since each line in the glyph halves the search area.</li>
+                <li>Transcribe all glyphs carefully onto a sheet of paper. This will serve as a more reliable reference than working directly from the plate.</li>
+                <li>Start by identifying the bottom square of each glyph, as it provides a stable starting point for the decoding process.</li>
+                <li>Next, identify the top square of the glyph to narrow your search within that section of the word list.</li>
+                <li>Alternatively, you can use binary search to navigate through the word list, since each line in the glyph halves the remaining search area.</li>
                 <li>Verify the transcribed seed phrase with your wallet to ensure its accuracy and integrity.</li>
             </ol>
         </details>
         <details class="section">
-            <summary id="on_chain_reproducer">On-chain Glyph Reproducer</summary>
-            <p>The glyph reference table is also archived <a href="https://mempool.space/tx/2a5525e24ac3beb36c736aa8de173e3f326d50d128ac7fa0147ea83cef30c133" target="_blank">in block #940984</a>.</p>
+            <summary id="on_chain_reproducer">On-Chain Glyph Reproducer</summary>
+            <p id="fold_reproducer_todo" hidden><strong>TODO:</strong> Archive the Fold glyph reference table on-chain.</p>
+            <p>The Stack glyph reference table is also archived <a href="https://mempool.space/tx/2a5525e24ac3beb36c736aa8de173e3f326d50d128ac7fa0147ea83cef30c133" target="_blank">in block #940984</a>.</p>
             <p>Run the following script in your terminal to extract the embedded Python snippet and print the reference table:</p>
             <pre class="command-block">curl -s https://mempool.space/api/tx/2a5525e24ac3beb36c736aa8de173e3f326d50d128ac7fa0147ea83cef30c133/hex | xxd -r -p | strings | grep bitcan | python</pre>
         </details>
@@ -279,7 +391,7 @@
     const height = 2 * width;
     const lineInset = 8;
     const midLineInset = 1.7 * lineInset;
-    const lines = [
+    const stackLines = [
         [lineInset, 0, width - lineInset, 0],
         [0, lineInset, 0, width - lineInset],
         [midLineInset, midLineInset, width - midLineInset, width - midLineInset],
@@ -294,9 +406,27 @@
 
         [lineInset, height, width - lineInset, height],
     ];
-    const binaryLength = lines.length;
+    const foldMidpoint = width / 2;
+    const foldLines = [
+        stackLines[0],
+        stackLines[1],
+        [midLineInset, midLineInset, foldMidpoint, width - midLineInset],
+        [width - midLineInset, midLineInset, foldMidpoint, width - midLineInset],
+        stackLines[4],
+
+        stackLines[5],
+        stackLines[6],
+        [foldMidpoint, width + midLineInset, midLineInset, height - midLineInset],
+        [foldMidpoint, width + midLineInset, width - midLineInset, height - midLineInset],
+        stackLines[9],
+
+        stackLines[10],
+    ];
+    const glyphFormats = {stack: stackLines, fold: foldLines};
+    const binaryLength = stackLines.length;
     const animationCycle = binaryLength * 2;
 
+    let activeFormat = 'stack';
     let currentIndex = 0;
 
     function drawCurrent() {
@@ -304,7 +434,7 @@
         animationContainer.innerHTML = '';
 
         const index = (1 << (binaryLength - Math.abs((currentIndex % animationCycle) - binaryLength))) >> 1;
-        renderWordAndGlyph(animationContainer, "", index);
+        renderWordAndGlyph(animationContainer, "", index, activeFormat);
 
         currentIndex = (currentIndex + 1) % animationCycle;
     }
@@ -316,7 +446,7 @@
         return num.toString(2).padStart(binaryLength, '0');
     }
 
-    function renderWordAndGlyph(container, word, index) {
+    function renderWordAndGlyph(container, word, index, format = activeFormat) {
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         let svgHeight = height + 2 * lineInset + 10;
         let y = 0;
@@ -348,7 +478,7 @@
 
         const binaryString = asBinary(index);
 
-        drawChar(svg, binaryString.split('').reverse().join(''), true, 0, y, false);
+        drawChar(svg, binaryString.split('').reverse().join(''), true, 0, y, false, glyphFormats[format]);
 
         const binaryTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         binaryTextElement.setAttribute("x", width / 2);
@@ -368,7 +498,7 @@
         container.appendChild(svg);
     }
 
-    function drawChar(svg, binaryString, drawRect, x, y, dotted) {
+    function drawChar(svg, binaryString, drawRect, x, y, dotted, glyphLines) {
         if (drawRect) {
             const background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
             background.setAttribute('x', x);
@@ -392,13 +522,42 @@
             svg.appendChild(line);
         }
 
-        "01".split('').forEach(char => {
-            lines.forEach((points, index) => {
+        for (const char of '01') {
+            glyphLines.forEach(([x1, y1, x2, y2], index) => {
                 if (binaryString[index] === char) {
-                    drawLine(svg, x + points[0], y + points[1], x + points[2], y + points[3], char === '1', dotted);
+                    drawLine(svg, x + x1, y + y1, x + x2, y + y2, char === '1', dotted);
                 }
             });
+        }
+    }
+
+    document.querySelectorAll('.centered-images a[data-glyph-format]').forEach(link => {
+        const format = link.dataset.glyphFormat;
+        const overlay = document.createElement('span');
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        overlay.className = 'format-overlay';
+        overlay.hidden = true;
+        svg.classList.add('format-glyph');
+        svg.dataset.format = format;
+        svg.setAttribute('viewBox', '-8 -8 66 116');
+        svg.setAttribute('aria-hidden', 'true');
+        overlay.append(svg, format[0].toUpperCase() + format.slice(1));
+        link.appendChild(overlay);
+    });
+
+    const formatGlyph = asBinary((1 << 2) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 8)).split('').reverse().join('');
+    document.querySelectorAll('.format-glyph').forEach(svg => {
+        drawChar(svg, formatGlyph, false, 0, 0, false, glyphFormats[svg.dataset.format]);
+    });
+
+    function updateFormatOverlays(activeFormat) {
+        document.querySelectorAll('.centered-images a[data-glyph-format]').forEach(link => {
+            link.querySelector('.format-overlay').hidden = link.dataset.glyphFormat === activeFormat;
         });
+    }
+
+    function updateFoldReproducerTodo(activeFormat) {
+        document.getElementById('fold_reproducer_todo').hidden = activeFormat !== 'fold';
     }
 
     const crcTable = Array.from({length: 256}, (_, index) => {
@@ -457,7 +616,9 @@
 
                     const wordBox = document.createElement('div');
                     wordBox.className = 'word-box';
-                    renderWordAndGlyph(wordBox, word, asBinary(index));
+                    wordBox.dataset.word = word;
+                    wordBox.dataset.index = index;
+                    renderWordAndGlyph(wordBox, word, index);
                     wordsContainer.appendChild(wordBox);
                 });
             })
@@ -469,6 +630,13 @@
     }
 
     fetchAndDisplayWords();
+
+    function redrawWords() {
+        document.querySelectorAll('#words_container .word-box').forEach(wordBox => {
+            wordBox.innerHTML = '';
+            renderWordAndGlyph(wordBox, wordBox.dataset.word, Number(wordBox.dataset.index), activeFormat);
+        });
+    }
 
     function drawTemplateSVG() {
         function createSVGLine(svg, x1, y1, x2, y2, lineWidth) {
@@ -501,28 +669,23 @@
         const totalWidth = inset * 2 + glyphWidth * (glyphsPerCol * 2 - 1);
         const totalHeight = inset * 2 + glyphWidth * (glyphsPerRow * 3 - 1);
 
-        function prepareTemplate() {
-            const template = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            template.classList.add('template-svg');
-            template.setAttribute("width", totalWidth * scale);
-            template.setAttribute("height", totalHeight * scale);
-            template.setAttribute("viewBox", `${-lineWidth} ${-lineWidth} ${totalWidth + 2 * lineWidth} ${totalHeight + 2 * lineWidth}`);
+        const template = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        template.classList.add('template-svg');
+        template.setAttribute("width", totalWidth * scale);
+        template.setAttribute("height", totalHeight * scale);
+        template.setAttribute("viewBox", `${-lineWidth} ${-lineWidth} ${totalWidth + 2 * lineWidth} ${totalHeight + 2 * lineWidth}`);
 
-            const background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-            background.setAttribute('width', totalWidth);
-            background.setAttribute('height', totalHeight);
-            background.setAttribute('fill', 'white');
-            background.setAttribute('stroke', 'grey');
-            template.appendChild(background);
-            return template;
-        }
-
-        const template = prepareTemplate();
+        const background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        background.setAttribute('width', totalWidth);
+        background.setAttribute('height', totalHeight);
+        background.setAttribute('fill', 'white');
+        background.setAttribute('stroke', 'grey');
+        template.appendChild(background);
         for (let row = 0; row < glyphsPerRow; row++) {
             for (let col = 0; col < glyphsPerCol; col++) {
                 const x = inset + col * 2 * glyphWidth;
                 const y = inset + row * 3 * glyphWidth;
-                drawChar(template, '00000000000', false, x, y, dotted);
+                drawChar(template, '00000000000', false, x, y, dotted, glyphFormats[activeFormat]);
             }
         }
 
@@ -588,6 +751,19 @@
     document.querySelectorAll('input[name="orientation"], input[name="alignmentMarks"], input[name="layout"], input[name="scale"], input[name="webLink"], input[name="cornerMarks"], input[name="dotted"]')
         .forEach(input => input.addEventListener('input', drawTemplateSVG));
 
+    document.querySelectorAll('input[name="glyphFormat"]')
+        .forEach(input => input.addEventListener('change', () => {
+            activeFormat = input.value;
+            currentIndex = 8;
+            drawCurrent();
+            redrawWords();
+            drawTemplateSVG();
+            updateFormatOverlays(activeFormat);
+            updateFoldReproducerTodo(activeFormat);
+        }));
+
+    updateFormatOverlays('stack');
+    updateFoldReproducerTodo('stack');
     drawTemplateSVG();
 </script>
 </body>
