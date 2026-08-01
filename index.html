@@ -372,7 +372,8 @@
         </details>
         <details class="section">
             <summary id="on_chain_reproducer">On-Chain Glyph Reproducer</summary>
-            <p>The glyph reference table is also archived <a href="https://mempool.space/tx/2a5525e24ac3beb36c736aa8de173e3f326d50d128ac7fa0147ea83cef30c133" target="_blank">in block #940984</a>.</p>
+            <p id="fold_reproducer_todo" hidden><strong>TODO:</strong> Archive the Fold glyph reference table on-chain.</p>
+            <p>The Stack glyph reference table is also archived <a href="https://mempool.space/tx/2a5525e24ac3beb36c736aa8de173e3f326d50d128ac7fa0147ea83cef30c133" target="_blank">in block #940984</a>.</p>
             <p>Run the following script in your terminal to extract the embedded Python snippet and print the reference table:</p>
             <pre class="command-block">curl -s https://mempool.space/api/tx/2a5525e24ac3beb36c736aa8de173e3f326d50d128ac7fa0147ea83cef30c133/hex | xxd -r -p | strings | grep bitcan | python</pre>
         </details>
@@ -553,6 +554,10 @@
         document.querySelectorAll('.centered-images a[data-glyph-format]').forEach(link => {
             link.querySelector('.format-overlay').hidden = link.dataset.glyphFormat === activeFormat;
         });
+    }
+
+    function updateFoldReproducerTodo(activeFormat) {
+        document.getElementById('fold_reproducer_todo').hidden = activeFormat !== 'fold';
     }
 
     const crcTable = Array.from({length: 256}, (_, index) => {
@@ -754,9 +759,11 @@
             redrawWords();
             drawTemplateSVG();
             updateFormatOverlays(activeFormat);
+            updateFoldReproducerTodo(activeFormat);
         }));
 
     updateFormatOverlays('stack');
+    updateFoldReproducerTodo('stack');
     drawTemplateSVG();
 </script>
 </body>
