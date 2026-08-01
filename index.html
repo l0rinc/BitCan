@@ -501,23 +501,18 @@
         const totalWidth = inset * 2 + glyphWidth * (glyphsPerCol * 2 - 1);
         const totalHeight = inset * 2 + glyphWidth * (glyphsPerRow * 3 - 1);
 
-        function prepareTemplate() {
-            const template = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            template.classList.add('template-svg');
-            template.setAttribute("width", totalWidth * scale);
-            template.setAttribute("height", totalHeight * scale);
-            template.setAttribute("viewBox", `${-lineWidth} ${-lineWidth} ${totalWidth + 2 * lineWidth} ${totalHeight + 2 * lineWidth}`);
+        const template = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        template.classList.add('template-svg');
+        template.setAttribute("width", totalWidth * scale);
+        template.setAttribute("height", totalHeight * scale);
+        template.setAttribute("viewBox", `${-lineWidth} ${-lineWidth} ${totalWidth + 2 * lineWidth} ${totalHeight + 2 * lineWidth}`);
 
-            const background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-            background.setAttribute('width', totalWidth);
-            background.setAttribute('height', totalHeight);
-            background.setAttribute('fill', 'white');
-            background.setAttribute('stroke', 'grey');
-            template.appendChild(background);
-            return template;
-        }
-
-        const template = prepareTemplate();
+        const background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        background.setAttribute('width', totalWidth);
+        background.setAttribute('height', totalHeight);
+        background.setAttribute('fill', 'white');
+        background.setAttribute('stroke', 'grey');
+        template.appendChild(background);
         for (let row = 0; row < glyphsPerRow; row++) {
             for (let col = 0; col < glyphsPerCol; col++) {
                 const x = inset + col * 2 * glyphWidth;
