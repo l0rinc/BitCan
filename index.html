@@ -45,6 +45,65 @@
             cursor: pointer;
         }
 
+        .format-switcher {
+            position: fixed;
+            right: 1em;
+            bottom: 1em;
+            z-index: 10;
+            display: flex;
+            gap: 0.2em;
+            margin: 0;
+            padding: 0.25em;
+            border: var(--light-grey-border);
+            border-radius: 0.5em;
+            background: white;
+            box-shadow: var(--box-shadow);
+        }
+
+        .format-switcher legend,
+        .format-switcher input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+        }
+
+        .format-option {
+            display: flex;
+            align-items: center;
+            gap: 0.4em;
+            padding: 0.45em 0.65em;
+            border-radius: 0.3em;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .format-glyph {
+            width: 1em;
+            height: 2em;
+            flex: none;
+        }
+
+        .format-switcher input:checked + .format-option {
+            color: white;
+            background: #222;
+        }
+
+        .format-switcher input:checked + .format-option line.light {
+            stroke: #666;
+        }
+
+        .format-switcher input:checked + .format-option line.bold {
+            stroke: white;
+        }
+
+        .format-switcher input:focus-visible + .format-option {
+            outline: 2px solid #E0653B;
+            outline-offset: 1px;
+        }
+
         .word-box {
             width: 3em;
             padding: 0.3em;
@@ -169,7 +228,7 @@
                 background: none;
             }
 
-            #toc_container, .toc-item {
+            #toc_container, .toc-item, .format-switcher {
                 display: none;
             }
 
@@ -183,6 +242,17 @@
     </style>
 </head>
 <body>
+<fieldset class="format-switcher">
+    <legend>Glyph format</legend>
+    <label>
+        <input type="radio" name="glyphFormat" value="stack" checked>
+        <span class="format-option"><svg class="format-glyph" data-format="stack" viewBox="-8 -8 66 116" aria-hidden="true"></svg>Stack</span>
+    </label>
+    <label>
+        <input type="radio" name="glyphFormat" value="fold">
+        <span class="format-option"><svg class="format-glyph" data-format="fold" viewBox="-8 -8 66 116" aria-hidden="true"></svg>Fold</span>
+    </label>
+</fieldset>
 <div>
     <article>
         <h1><a href="https://app.suno.ai/song/ba7932e8-4158-44a6-8ee1-2e09f210f178" target="_blank"><img src="Logo.svg" alt="" class="logo"></a> DIY Bitcoin Seed Storage</h1>
@@ -279,7 +349,7 @@
     const height = 2 * width;
     const lineInset = 8;
     const midLineInset = 1.7 * lineInset;
-    const lines = [
+    const stackLines = [
         [lineInset, 0, width - lineInset, 0],
         [0, lineInset, 0, width - lineInset],
         [midLineInset, midLineInset, width - midLineInset, width - midLineInset],
@@ -294,9 +364,27 @@
 
         [lineInset, height, width - lineInset, height],
     ];
-    const binaryLength = lines.length;
+    const foldMidpoint = width / 2;
+    const foldLines = [
+        stackLines[0],
+        stackLines[1],
+        [midLineInset, midLineInset, foldMidpoint, width - midLineInset],
+        [width - midLineInset, midLineInset, foldMidpoint, width - midLineInset],
+        stackLines[4],
+
+        stackLines[5],
+        stackLines[6],
+        [foldMidpoint, width + midLineInset, midLineInset, height - midLineInset],
+        [foldMidpoint, width + midLineInset, width - midLineInset, height - midLineInset],
+        stackLines[9],
+
+        stackLines[10],
+    ];
+    const glyphFormats = {stack: stackLines, fold: foldLines};
+    const binaryLength = stackLines.length;
     const animationCycle = binaryLength * 2;
 
+    let activeFormat = 'stack';
     let currentIndex = 0;
 
     function drawCurrent() {
@@ -304,7 +392,7 @@
         animationContainer.innerHTML = '';
 
         const index = (1 << (binaryLength - Math.abs((currentIndex % animationCycle) - binaryLength))) >> 1;
-        renderWordAndGlyph(animationContainer, "", index);
+        renderWordAndGlyph(animationContainer, "", index, activeFormat);
 
         currentIndex = (currentIndex + 1) % animationCycle;
     }
@@ -316,7 +404,7 @@
         return num.toString(2).padStart(binaryLength, '0');
     }
 
-    function renderWordAndGlyph(container, word, index) {
+    function renderWordAndGlyph(container, word, index, format = activeFormat) {
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         let svgHeight = height + 2 * lineInset + 10;
         let y = 0;
@@ -348,7 +436,7 @@
 
         const binaryString = asBinary(index);
 
-        drawChar(svg, binaryString.split('').reverse().join(''), true, 0, y, false);
+        drawChar(svg, binaryString.split('').reverse().join(''), true, 0, y, false, glyphFormats[format]);
 
         const binaryTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         binaryTextElement.setAttribute("x", width / 2);
@@ -368,7 +456,7 @@
         container.appendChild(svg);
     }
 
-    function drawChar(svg, binaryString, drawRect, x, y, dotted) {
+    function drawChar(svg, binaryString, drawRect, x, y, dotted, glyphLines) {
         if (drawRect) {
             const background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
             background.setAttribute('x', x);
@@ -393,13 +481,18 @@
         }
 
         for (const char of '01') {
-            lines.forEach(([x1, y1, x2, y2], index) => {
+            glyphLines.forEach(([x1, y1, x2, y2], index) => {
                 if (binaryString[index] === char) {
                     drawLine(svg, x + x1, y + y1, x + x2, y + y2, char === '1', dotted);
                 }
             });
         }
     }
+
+    const formatGlyph = asBinary((1 << 2) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 8)).split('').reverse().join('');
+    document.querySelectorAll('.format-glyph').forEach(svg => {
+        drawChar(svg, formatGlyph, false, 0, 0, false, glyphFormats[svg.dataset.format]);
+    });
 
     const crcTable = Array.from({length: 256}, (_, index) => {
         let crc = index;
@@ -457,6 +550,8 @@
 
                     const wordBox = document.createElement('div');
                     wordBox.className = 'word-box';
+                    wordBox.dataset.word = word;
+                    wordBox.dataset.index = index;
                     renderWordAndGlyph(wordBox, word, index);
                     wordsContainer.appendChild(wordBox);
                 });
@@ -469,6 +564,13 @@
     }
 
     fetchAndDisplayWords();
+
+    function redrawWords() {
+        document.querySelectorAll('#words_container .word-box').forEach(wordBox => {
+            wordBox.innerHTML = '';
+            renderWordAndGlyph(wordBox, wordBox.dataset.word, Number(wordBox.dataset.index), activeFormat);
+        });
+    }
 
     function drawTemplateSVG() {
         function createSVGLine(svg, x1, y1, x2, y2, lineWidth) {
@@ -517,7 +619,7 @@
             for (let col = 0; col < glyphsPerCol; col++) {
                 const x = inset + col * 2 * glyphWidth;
                 const y = inset + row * 3 * glyphWidth;
-                drawChar(template, '00000000000', false, x, y, dotted);
+                drawChar(template, '00000000000', false, x, y, dotted, glyphFormats[activeFormat]);
             }
         }
 
@@ -582,6 +684,15 @@
 
     document.querySelectorAll('input[name="orientation"], input[name="alignmentMarks"], input[name="layout"], input[name="scale"], input[name="webLink"], input[name="cornerMarks"], input[name="dotted"]')
         .forEach(input => input.addEventListener('input', drawTemplateSVG));
+
+    document.querySelectorAll('input[name="glyphFormat"]')
+        .forEach(input => input.addEventListener('change', () => {
+            activeFormat = input.value;
+            currentIndex = 8;
+            drawCurrent();
+            redrawWords();
+            drawTemplateSVG();
+        }));
 
     drawTemplateSVG();
 </script>
